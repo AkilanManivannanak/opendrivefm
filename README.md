@@ -379,7 +379,7 @@ Profiling:    bench_latency.py — 200 iters, 20 warmup, p50/p95
 ```bibtex
 @misc{opendrivefm2026,
   title   = {OpenDriveFM: Trust-Aware Multi-Camera BEV Perception},
-  author  = {Akila Lourdes},
+  author  = {Akila Lourdes,Akilan Manivannan},
   year    = {2026},
   school  = {LIU},
   note    = {Image and Vision Computing Course Project}
