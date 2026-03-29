@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "opendrivefm"
+version = "0.1.0"
+description = "Robust Multi-Camera BEV Occupancy Mapping with Trust-Aware Fusion"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "torchvision",
+    "einops>=0.7",
+    "pytorch-lightning>=2.0",
+    "nuscenes-devkit>=1.1",
+    "numpy",
+    "Pillow",
+    "matplotlib",
+    "scipy",
+    "pyquaternion",
+    "pandas",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "black", "isort"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

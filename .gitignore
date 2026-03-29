@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.npz
+*.zip
+*.ckpt
+*.pt
+*.pth
+.DS_Store
+outputs/
+lightning_logs/
+data/
+dataset/
+wandb/

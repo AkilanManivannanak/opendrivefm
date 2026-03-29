@@ -1,0 +1,41 @@
+# OpenDriveFM — Default Configuration
+# ─────────────────────────────────────
+# Used by train_nuscenes_mini_trust.py and eval scripts.
+
+model:
+  d: 384           # backbone feature dimension
+  bev: 64          # BEV grid size (bev x bev)
+  horizon: 12      # trajectory prediction steps (6 seconds @ 2Hz)
+  enable_trust: true
+
+data:
+  manifest:   artifacts/nuscenes_mini_manifest.jsonl
+  label_root: artifacts/nuscenes_labels
+  image_hw:   [90, 160]   # [H, W]
+  frames: 1
+  val_frac_scenes: 0.2
+  seed: 42
+
+training:
+  lr: 3e-4
+  batch_size: 2
+  max_epochs: 20
+  weight_decay: 0.01
+  grad_clip: 1.0
+  ckpt_dir: artifacts/checkpoints_trust
+
+loss:
+  occ_dice_w: 0.7
+  pos_weight_cap: 15.0
+  pos_weight: 10.0
+  traj_w: 1.0
+  traj_beta: 1.0
+  resid_l2_w: 0.02
+  time_weight_power: 1.0
+  trust_w: 0.05       # trust regularisation weight
+  trust_target: 0.75  # desired mean trust score
+
+eval:
+  ckpt: artifacts/checkpoints_trust/last.ckpt
+  batch_size: 2
+  perturb_cam_idx: 0   # 0=FRONT camera for robustness test
