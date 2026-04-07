@@ -1,6 +1,4 @@
-# OpenDriveFM 🚗
-
-> **Trust-Aware Multi-Camera BEV Occupancy Prediction with Ego Trajectory Estimation**
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0b3d2e,50:16a34a,100:86efac&height=220&section=header&text=OpenDriveFM%20%F0%9F%9A%97&fontSize=58&fontColor=ffffff&fontAlignY=38&desc=Trust-Aware%20Multi-Camera%20BEV%20Occupancy%20Prediction%20with%20Ego%20Trajectory%20Estimation&descAlignY=60&descSize=20&animation=fadeIn" width="100%"/>
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red?logo=pytorch)](https://pytorch.org)
@@ -389,3 +387,5 @@ Profiling:    bench_latency.py — 200 iters, 20 warmup, p50/p95
 ---
 
 *Built with PyTorch Lightning on Apple Silicon — course project, LIU, March 2026*
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:052e16,50:15803d,100:4ade80&height=120&section=footer" width="100%"/>
