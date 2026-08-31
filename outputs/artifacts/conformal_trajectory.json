@@ -1,0 +1,73 @@
+{
+  "checkpoint": "outputs/artifacts/checkpoints_v11_trustfix2/trust_fixed_v2.ckpt",
+  "alpha": 0.1,
+  "nominal_coverage": 0.9,
+  "horizon": 12,
+  "n_calibration": 41,
+  "n_test": 41,
+  "conformal_radius_global_m": 5.155412673950195,
+  "conformal_radius_per_horizon_m": [
+    0.3622477054595947,
+    0.9704742431640625,
+    2.0647501945495605,
+    2.89421010017395,
+    3.427055597305298,
+    4.615768909454346,
+    5.503767013549805,
+    6.131048679351807,
+    6.879787445068359,
+    8.404928207397461,
+    8.76551628112793,
+    10.0494966506958
+  ],
+  "coverage": {
+    "clean": {
+      "coverage_global_radius": 0.8861788617886179,
+      "coverage_per_horizon": 0.8963414634146342,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.812952995300293,
+      "p95_error_m": 10.144022512435912,
+      "coverage_shortfall_pp": 0.3658536585365857
+    },
+    "blur": {
+      "coverage_global_radius": 0.8841463414634146,
+      "coverage_per_horizon": 0.8943089430894309,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.8382503986358643,
+      "p95_error_m": 10.38056216239929,
+      "coverage_shortfall_pp": 0.5691056910569148
+    },
+    "glare": {
+      "coverage_global_radius": 0.8841463414634146,
+      "coverage_per_horizon": 0.8963414634146342,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.7988812923431396,
+      "p95_error_m": 10.16593446731567,
+      "coverage_shortfall_pp": 0.3658536585365857
+    },
+    "occlusion": {
+      "coverage_global_radius": 0.8841463414634146,
+      "coverage_per_horizon": 0.8983739837398373,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.8082334995269775,
+      "p95_error_m": 9.95332551002502,
+      "coverage_shortfall_pp": 0.1626016260162677
+    },
+    "rain": {
+      "coverage_global_radius": 0.8841463414634146,
+      "coverage_per_horizon": 0.9044715447154471,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.8359835147857666,
+      "p95_error_m": 9.366006851196286,
+      "coverage_shortfall_pp": 0.0
+    },
+    "noise": {
+      "coverage_global_radius": 0.8739837398373984,
+      "coverage_per_horizon": 0.9105691056910569,
+      "nominal_coverage": 0.9,
+      "mean_error_m": 2.92281174659729,
+      "p95_error_m": 9.09148449897766,
+      "coverage_shortfall_pp": 0.0
+    }
+  }
+}

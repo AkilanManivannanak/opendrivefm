@@ -72,6 +72,14 @@ def iou_ade(model, loader, device, trust_mode, fault_name=None):
             if trust_mode == 'uniform':
                 model.backbone.trust_scorer.forward = original_forward
 
+            if occ_logits.shape[-2:] != occ_t.shape[-2:]:
+                raise SystemExit(
+                    f"Label/prediction grid mismatch: model outputs "
+                    f"{tuple(occ_logits.shape[-2:])} but labels are "
+                    f"{tuple(occ_t.shape[-2:])}.\n"
+                    f"  The v11 model emits a 128x128 BEV grid. Pass "
+                    f"--label_root outputs/artifacts/nuscenes_labels_128 "
+                    f"(nuscenes_labels holds the older 64x64 set).")
             pred  = (torch.sigmoid(occ_logits) > THR).float()
             inter = (pred * occ_t).sum((1,2,3))
             union = (pred + occ_t).clamp(0,1).sum((1,2,3))
@@ -89,15 +97,18 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--ckpt',     required=True)
     p.add_argument('--manifest', default='artifacts/nuscenes_mini_manifest.jsonl')
-    p.add_argument('--label_root', default='artifacts/nuscenes_labels')
+    p.add_argument('--label_root', default='outputs/artifacts/nuscenes_labels_128')
     p.add_argument('--out',      default='artifacts/ablation_results.json')
+    p.add_argument('--bev', type=int, default=128,
+                   help='BEV grid size. model.py (v11) asserts 128; this script\n'
+                        'hardcoded 64, which predates the v11 architecture.')
     args = p.parse_args()
 
     device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Device: {device}")
 
     ckpt = torch.load(args.ckpt, map_location=device)
-    lit = LitOpenDriveFM(bev=64)
+    lit = LitOpenDriveFM(bev=args.bev)
     state = {k.replace("model.","",1):v for k,v in ckpt["state_dict"].items()}
     lit.model.load_state_dict(state, strict=False)
     model = lit.model.eval().to(device)

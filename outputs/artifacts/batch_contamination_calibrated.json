@@ -1,0 +1,68 @@
+{
+  "checkpoint": {
+    "path": "outputs/artifacts/checkpoints_v11_trustfix2/trust_fixed_v2_cal.ckpt",
+    "weights_matched": 171,
+    "weights_expected": 171,
+    "match_rate": 1.0,
+    "missing_trust_keys": 0,
+    "trust_stats_calibrated": true,
+    "unexpected_keys": 0
+  },
+  "fault": "occlusion",
+  "faulted_camera": 0,
+  "trust_grid": 1,
+  "val_scenes": [
+    "scene-0655",
+    "scene-1077"
+  ],
+  "sweep": [
+    {
+      "batch_size": 1,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.016020039096474648,
+      "mean_abs_delta_untouched_cams": 0.0,
+      "contamination_ratio": 0.0,
+      "max_abs_delta_untouched_cams": 0.0,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 2,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.0160200372338295,
+      "mean_abs_delta_untouched_cams": 0.0,
+      "contamination_ratio": 0.0,
+      "max_abs_delta_untouched_cams": 0.0,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 4,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.016020039096474648,
+      "mean_abs_delta_untouched_cams": 0.0,
+      "contamination_ratio": 0.0,
+      "max_abs_delta_untouched_cams": 0.0,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 8,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.016020039096474648,
+      "mean_abs_delta_untouched_cams": 0.0,
+      "contamination_ratio": 0.0,
+      "max_abs_delta_untouched_cams": 0.0,
+      "verdict": "negligible"
+    }
+  ],
+  "worst_ratio": 0.0,
+  "frame_purity": {
+    "reference_batch_size": 1,
+    "worst_batch_size": 4,
+    "max_abs_trust_delta": 1.1920928955078125e-07
+  },
+  "faulted_effect_size_spread": 1.1626970059273131e-07,
+  "trend": "is negligible at every batch size, so no trend is claimed (comparing near-zero ratios would be reading noise)"
+}

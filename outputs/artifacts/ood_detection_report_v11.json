@@ -1,0 +1,1002 @@
+{
+  "checkpoint": {
+    "path": "outputs/artifacts/checkpoints_v11_temporal/best_val_ade.ckpt",
+    "weights_matched": 169,
+    "weights_expected": 169,
+    "match_rate": 1.0,
+    "missing_trust_keys": 0,
+    "unexpected_keys": 0
+  },
+  "config": {
+    "manifest": "outputs/artifacts/nuscenes_mini_manifest.jsonl",
+    "label_root": "outputs/artifacts/nuscenes_labels",
+    "val_scenes": [
+      "scene-0655",
+      "scene-1077"
+    ],
+    "n_frames": 82,
+    "n_cameras": 6,
+    "faults": [
+      "blur",
+      "glare",
+      "occlusion",
+      "rain",
+      "noise"
+    ],
+    "cameras_faulted": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fpr_budget": 0.05,
+    "bootstrap": 1000,
+    "seed": 42,
+    "image_hw": [
+      90,
+      160
+    ],
+    "bev": 128,
+    "device": "mps"
+  },
+  "overall": {
+    "absolute": {
+      "auroc": 0.4342669707184877,
+      "auroc_ci95": [
+        0.41863786230087907,
+        0.44932813842620134
+      ],
+      "average_precision": 0.4908193234876302,
+      "detection_rate_at_0.05_fpr": 0.06707317073170732,
+      "threshold": -0.5358712077140808,
+      "n_positive": 2460,
+      "n_negative": 2460
+    },
+    "relative": {
+      "auroc": 0.39950302399365456,
+      "auroc_ci95": [
+        0.3841162543790072,
+        0.4154870571419129
+      ],
+      "average_precision": 0.4709916335780934,
+      "detection_rate_at_0.05_fpr": 0.06707317073170732,
+      "threshold": 0.009896337985992432,
+      "n_positive": 2460,
+      "n_negative": 2460
+    }
+  },
+  "per_fault": {
+    "blur@cam0": {
+      "fault": "blur",
+      "camera_index": 0,
+      "camera": "CAM_FRONT",
+      "mean_trust_clean": 0.566419243812561,
+      "mean_trust_faulted": 0.5706374645233154,
+      "mean_trust_drop": -0.0042182207107543945,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5215645449137418,
+          "auroc_ci95": [
+            0.42160172516359307,
+            0.616455978584176
+          ],
+          "average_precision": 0.46222140302211845,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5400703907012939
+        },
+        "relative": {
+          "auroc": 0.4665377751338489,
+          "auroc_ci95": [
+            0.3643664485425342,
+            0.5736503569303986
+          ],
+          "average_precision": 0.5164857115139305,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": 0.0022059410810470613
+        }
+      }
+    },
+    "blur@cam1": {
+      "fault": "blur",
+      "camera_index": 1,
+      "camera": "CAM_FRONT_LEFT",
+      "mean_trust_clean": 0.5618435740470886,
+      "mean_trust_faulted": 0.562178373336792,
+      "mean_trust_drop": -0.00033479928970336914,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5812016656751934,
+          "auroc_ci95": [
+            0.48274836406900656,
+            0.6762418203450327
+          ],
+          "average_precision": 0.509177428637734,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": -0.5360421687364578
+        },
+        "relative": {
+          "auroc": 0.5925788221296847,
+          "auroc_ci95": [
+            0.501773497917906,
+            0.6915024538964901
+          ],
+          "average_precision": 0.5219526426715807,
+          "detection_rate_at_0.05_fpr": 0.024390243902439025,
+          "threshold": 0.011551082134246826
+        }
+      }
+    },
+    "blur@cam2": {
+      "fault": "blur",
+      "camera_index": 2,
+      "camera": "CAM_FRONT_RIGHT",
+      "mean_trust_clean": 0.5656070113182068,
+      "mean_trust_faulted": 0.568099856376648,
+      "mean_trust_drop": -0.002492845058441162,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5343545508625818,
+          "auroc_ci95": [
+            0.43768218322427127,
+            0.6331201665675193
+          ],
+          "average_precision": 0.4701357954723704,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": -0.5405351638793945
+        },
+        "relative": {
+          "auroc": 0.473750743604997,
+          "auroc_ci95": [
+            0.3800044616299822,
+            0.565002230814991
+          ],
+          "average_precision": 0.4794942036669048,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": 0.005939188599586489
+        }
+      }
+    },
+    "blur@cam3": {
+      "fault": "blur",
+      "camera_index": 3,
+      "camera": "CAM_BACK",
+      "mean_trust_clean": 0.5652053356170654,
+      "mean_trust_faulted": 0.5692213773727417,
+      "mean_trust_drop": -0.0040160417556762695,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5395597858417609,
+          "auroc_ci95": [
+            0.4363213860797145,
+            0.6399836406900654
+          ],
+          "average_precision": 0.46975540913710034,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5386903494596481
+        },
+        "relative": {
+          "auroc": 0.4712968471148126,
+          "auroc_ci95": [
+            0.3743233194527067,
+            0.5609793277810827
+          ],
+          "average_precision": 0.4902805141252437,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": 0.006689229607582096
+        }
+      }
+    },
+    "blur@cam4": {
+      "fault": "blur",
+      "camera_index": 4,
+      "camera": "CAM_BACK_LEFT",
+      "mean_trust_clean": 0.5605175495147705,
+      "mean_trust_faulted": 0.5608313679695129,
+      "mean_trust_drop": -0.00031381845474243164,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5748066627007733,
+          "auroc_ci95": [
+            0.4806625520523498,
+            0.6683819155264723
+          ],
+          "average_precision": 0.5146020066592683,
+          "detection_rate_at_0.05_fpr": 0.06097560975609756,
+          "threshold": -0.5350433021783829
+        },
+        "relative": {
+          "auroc": 0.5758477096966091,
+          "auroc_ci95": [
+            0.48032421177870316,
+            0.6689507733491968
+          ],
+          "average_precision": 0.5155586686626688,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": 0.014026787877082825
+        }
+      }
+    },
+    "blur@cam5": {
+      "fault": "blur",
+      "camera_index": 5,
+      "camera": "CAM_BACK_RIGHT",
+      "mean_trust_clean": 0.564924955368042,
+      "mean_trust_faulted": 0.5679965615272522,
+      "mean_trust_drop": -0.003071606159210205,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5214158239143367,
+          "auroc_ci95": [
+            0.42591835217132656,
+            0.6149947947650207
+          ],
+          "average_precision": 0.46292950902045693,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5378487199544907
+        },
+        "relative": {
+          "auroc": 0.43396787626412847,
+          "auroc_ci95": [
+            0.34369422962522306,
+            0.5297702260559191
+          ],
+          "average_precision": 0.46533605157888863,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": 0.004863250255584718
+        }
+      }
+    },
+    "glare@cam0": {
+      "fault": "glare",
+      "camera_index": 0,
+      "camera": "CAM_FRONT",
+      "mean_trust_clean": 0.566419243812561,
+      "mean_trust_faulted": 0.5717518329620361,
+      "mean_trust_drop": -0.005332589149475098,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3316478286734087,
+          "auroc_ci95": [
+            0.24757212968471148,
+            0.41576814396192735
+          ],
+          "average_precision": 0.39845640519598385,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5400703907012939
+        },
+        "relative": {
+          "auroc": 0.29357525282569896,
+          "auroc_ci95": [
+            0.2091017251635931,
+            0.3828227245687091
+          ],
+          "average_precision": 0.37777960345601563,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": 0.0022059410810470613
+        }
+      }
+    },
+    "glare@cam1": {
+      "fault": "glare",
+      "camera_index": 1,
+      "camera": "CAM_FRONT_LEFT",
+      "mean_trust_clean": 0.5618435740470886,
+      "mean_trust_faulted": 0.5649535655975342,
+      "mean_trust_drop": -0.0031099915504455566,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.33863771564544914,
+          "auroc_ci95": [
+            0.25580011897679955,
+            0.43027215942891134
+          ],
+          "average_precision": 0.3974570557349642,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5360421687364578
+        },
+        "relative": {
+          "auroc": 0.27900059488399764,
+          "auroc_ci95": [
+            0.2052089530041642,
+            0.3611168947055324
+          ],
+          "average_precision": 0.3856941314866201,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": 0.011551082134246826
+        }
+      }
+    },
+    "glare@cam2": {
+      "fault": "glare",
+      "camera_index": 2,
+      "camera": "CAM_FRONT_RIGHT",
+      "mean_trust_clean": 0.5656070113182068,
+      "mean_trust_faulted": 0.570175290107727,
+      "mean_trust_drop": -0.004568278789520264,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.37581796549672813,
+          "auroc_ci95": [
+            0.29013607971445565,
+            0.46610276621058894
+          ],
+          "average_precision": 0.41657224899935025,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": -0.5405351638793945
+        },
+        "relative": {
+          "auroc": 0.31469363474122547,
+          "auroc_ci95": [
+            0.23868976799524094,
+            0.3971631469363474
+          ],
+          "average_precision": 0.38931225206190145,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": 0.005939188599586489
+        }
+      }
+    },
+    "glare@cam3": {
+      "fault": "glare",
+      "camera_index": 3,
+      "camera": "CAM_BACK",
+      "mean_trust_clean": 0.5652053356170654,
+      "mean_trust_faulted": 0.5708889365196228,
+      "mean_trust_drop": -0.005683600902557373,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3178167757287329,
+          "auroc_ci95": [
+            0.23259220701963118,
+            0.41018367043426535
+          ],
+          "average_precision": 0.39387274277215023,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": -0.5386903494596481
+        },
+        "relative": {
+          "auroc": 0.2592207019631172,
+          "auroc_ci95": [
+            0.1830606781677573,
+            0.33417608566329565
+          ],
+          "average_precision": 0.36953853880001625,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": 0.006689229607582096
+        }
+      }
+    },
+    "glare@cam4": {
+      "fault": "glare",
+      "camera_index": 4,
+      "camera": "CAM_BACK_LEFT",
+      "mean_trust_clean": 0.5605175495147705,
+      "mean_trust_faulted": 0.5639421343803406,
+      "mean_trust_drop": -0.0034245848655700684,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.32406305770374777,
+          "auroc_ci95": [
+            0.23958581201665674,
+            0.41479402141582394
+          ],
+          "average_precision": 0.3908408240849752,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": -0.5350433021783829
+        },
+        "relative": {
+          "auroc": 0.24925639500297442,
+          "auroc_ci95": [
+            0.173226502082094,
+            0.3233343248066627
+          ],
+          "average_precision": 0.3699516701796208,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": 0.014026787877082825
+        }
+      }
+    },
+    "glare@cam5": {
+      "fault": "glare",
+      "camera_index": 5,
+      "camera": "CAM_BACK_RIGHT",
+      "mean_trust_clean": 0.564924955368042,
+      "mean_trust_faulted": 0.5690720081329346,
+      "mean_trust_drop": -0.004147052764892578,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.37477691850089234,
+          "auroc_ci95": [
+            0.29014723378941104,
+            0.4629796252230815
+          ],
+          "average_precision": 0.4167122325017842,
+          "detection_rate_at_0.05_fpr": 0.012195121951219513,
+          "threshold": -0.5378487199544907
+        },
+        "relative": {
+          "auroc": 0.3039857227840571,
+          "auroc_ci95": [
+            0.2255986020226056,
+            0.38999479476502075
+          ],
+          "average_precision": 0.3837767452748243,
+          "detection_rate_at_0.05_fpr": 0.0,
+          "threshold": 0.004863250255584718
+        }
+      }
+    },
+    "occlusion@cam0": {
+      "fault": "occlusion",
+      "camera_index": 0,
+      "camera": "CAM_FRONT",
+      "mean_trust_clean": 0.566419243812561,
+      "mean_trust_faulted": 0.5655548572540283,
+      "mean_trust_drop": 0.0008643865585327148,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5783759666864962,
+          "auroc_ci95": [
+            0.48909131469363476,
+            0.6656863474122545
+          ],
+          "average_precision": 0.5786451389302439,
+          "detection_rate_at_0.05_fpr": 0.0975609756097561,
+          "threshold": -0.5400703907012939
+        },
+        "relative": {
+          "auroc": 0.5938429506246282,
+          "auroc_ci95": [
+            0.5054952409280191,
+            0.6856856038072575
+          ],
+          "average_precision": 0.6247374079558773,
+          "detection_rate_at_0.05_fpr": 0.0975609756097561,
+          "threshold": 0.0022059410810470613
+        }
+      }
+    },
+    "occlusion@cam1": {
+      "fault": "occlusion",
+      "camera_index": 1,
+      "camera": "CAM_FRONT_LEFT",
+      "mean_trust_clean": 0.5618435740470886,
+      "mean_trust_faulted": 0.561484158039093,
+      "mean_trust_drop": 0.00035941600799560547,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5608268887566924,
+          "auroc_ci95": [
+            0.4663816180844735,
+            0.6493344735276622
+          ],
+          "average_precision": 0.5710895507881713,
+          "detection_rate_at_0.05_fpr": 0.10975609756097561,
+          "threshold": -0.5360421687364578
+        },
+        "relative": {
+          "auroc": 0.5429803688280785,
+          "auroc_ci95": [
+            0.45567742415229034,
+            0.6337262046400952
+          ],
+          "average_precision": 0.5381002150287227,
+          "detection_rate_at_0.05_fpr": 0.07317073170731707,
+          "threshold": 0.011551082134246826
+        }
+      }
+    },
+    "occlusion@cam2": {
+      "fault": "occlusion",
+      "camera_index": 2,
+      "camera": "CAM_FRONT_RIGHT",
+      "mean_trust_clean": 0.5656070113182068,
+      "mean_trust_faulted": 0.5646623373031616,
+      "mean_trust_drop": 0.000944674015045166,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5588935157644259,
+          "auroc_ci95": [
+            0.4674189470553242,
+            0.6491931885782273
+          ],
+          "average_precision": 0.5656796271388348,
+          "detection_rate_at_0.05_fpr": 0.13414634146341464,
+          "threshold": -0.5405351638793945
+        },
+        "relative": {
+          "auroc": 0.5788221296847115,
+          "auroc_ci95": [
+            0.4971259666864961,
+            0.6655487804878049
+          ],
+          "average_precision": 0.5873032771856941,
+          "detection_rate_at_0.05_fpr": 0.0975609756097561,
+          "threshold": 0.005939188599586489
+        }
+      }
+    },
+    "occlusion@cam3": {
+      "fault": "occlusion",
+      "camera_index": 3,
+      "camera": "CAM_BACK",
+      "mean_trust_clean": 0.5652053356170654,
+      "mean_trust_faulted": 0.5642521381378174,
+      "mean_trust_drop": 0.0009531974792480469,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5817965496728138,
+          "auroc_ci95": [
+            0.4906157049375372,
+            0.6691850089232599
+          ],
+          "average_precision": 0.5691060012594592,
+          "detection_rate_at_0.05_fpr": 0.0975609756097561,
+          "threshold": -0.5386903494596481
+        },
+        "relative": {
+          "auroc": 0.5764425936942297,
+          "auroc_ci95": [
+            0.49002453896490183,
+            0.6609495835812016
+          ],
+          "average_precision": 0.5670085328331497,
+          "detection_rate_at_0.05_fpr": 0.06097560975609756,
+          "threshold": 0.006689229607582096
+        }
+      }
+    },
+    "occlusion@cam4": {
+      "fault": "occlusion",
+      "camera_index": 4,
+      "camera": "CAM_BACK_LEFT",
+      "mean_trust_clean": 0.5605175495147705,
+      "mean_trust_faulted": 0.5602972507476807,
+      "mean_trust_drop": 0.00022029876708984375,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5661808447352766,
+          "auroc_ci95": [
+            0.4748438429506246,
+            0.6539782867340869
+          ],
+          "average_precision": 0.5718615524898499,
+          "detection_rate_at_0.05_fpr": 0.12195121951219512,
+          "threshold": -0.5350433021783829
+        },
+        "relative": {
+          "auroc": 0.5530933967876264,
+          "auroc_ci95": [
+            0.46381246281975014,
+            0.639652736466389
+          ],
+          "average_precision": 0.5435217039518849,
+          "detection_rate_at_0.05_fpr": 0.06097560975609756,
+          "threshold": 0.014026787877082825
+        }
+      }
+    },
+    "occlusion@cam5": {
+      "fault": "occlusion",
+      "camera_index": 5,
+      "camera": "CAM_BACK_RIGHT",
+      "mean_trust_clean": 0.564924955368042,
+      "mean_trust_faulted": 0.5641134977340698,
+      "mean_trust_drop": 0.000811457633972168,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.5483343248066627,
+          "auroc_ci95": [
+            0.45951814396192747,
+            0.6344586555621654
+          ],
+          "average_precision": 0.5480663845840678,
+          "detection_rate_at_0.05_fpr": 0.08536585365853659,
+          "threshold": -0.5378487199544907
+        },
+        "relative": {
+          "auroc": 0.5870017846519928,
+          "auroc_ci95": [
+            0.5007361689470553,
+            0.6706052944675789
+          ],
+          "average_precision": 0.5674336745786489,
+          "detection_rate_at_0.05_fpr": 0.04878048780487805,
+          "threshold": 0.004863250255584718
+        }
+      }
+    },
+    "rain@cam0": {
+      "fault": "rain",
+      "camera_index": 0,
+      "camera": "CAM_FRONT",
+      "mean_trust_clean": 0.566419243812561,
+      "mean_trust_faulted": 0.5736295580863953,
+      "mean_trust_drop": -0.0072103142738342285,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3050267697798929,
+          "auroc_ci95": [
+            0.22426011302795953,
+            0.39278331350386675
+          ],
+          "average_precision": 0.41400769249266356,
+          "detection_rate_at_0.05_fpr": 0.024390243902439025,
+          "threshold": -0.5400703907012939
+        },
+        "relative": {
+          "auroc": 0.2867340868530637,
+          "auroc_ci95": [
+            0.21146638905413445,
+            0.37492935752528256
+          ],
+          "average_precision": 0.39328560375417204,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": 0.0022059410810470613
+        }
+      }
+    },
+    "rain@cam1": {
+      "fault": "rain",
+      "camera_index": 1,
+      "camera": "CAM_FRONT_LEFT",
+      "mean_trust_clean": 0.5618435740470886,
+      "mean_trust_faulted": 0.5676756501197815,
+      "mean_trust_drop": -0.005832076072692871,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.34800713860797144,
+          "auroc_ci95": [
+            0.2630465496728138,
+            0.44915600832837593
+          ],
+          "average_precision": 0.5101650627364447,
+          "detection_rate_at_0.05_fpr": 0.14634146341463414,
+          "threshold": -0.5360421687364578
+        },
+        "relative": {
+          "auroc": 0.29417013682331944,
+          "auroc_ci95": [
+            0.21085663295657348,
+            0.38359235574063055
+          ],
+          "average_precision": 0.46056049382767433,
+          "detection_rate_at_0.05_fpr": 0.10975609756097561,
+          "threshold": 0.011551082134246826
+        }
+      }
+    },
+    "rain@cam2": {
+      "fault": "rain",
+      "camera_index": 2,
+      "camera": "CAM_FRONT_RIGHT",
+      "mean_trust_clean": 0.5656070113182068,
+      "mean_trust_faulted": 0.5735722780227661,
+      "mean_trust_drop": -0.007965266704559326,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3039857227840571,
+          "auroc_ci95": [
+            0.22040080309339677,
+            0.39080160618679344
+          ],
+          "average_precision": 0.40191642115712634,
+          "detection_rate_at_0.05_fpr": 0.024390243902439025,
+          "threshold": -0.5405351638793945
+        },
+        "relative": {
+          "auroc": 0.26516954193932185,
+          "auroc_ci95": [
+            0.18945568114217728,
+            0.34831945270672215
+          ],
+          "average_precision": 0.3842443740292486,
+          "detection_rate_at_0.05_fpr": 0.024390243902439025,
+          "threshold": 0.005939188599586489
+        }
+      }
+    },
+    "rain@cam3": {
+      "fault": "rain",
+      "camera_index": 3,
+      "camera": "CAM_BACK",
+      "mean_trust_clean": 0.5652053356170654,
+      "mean_trust_faulted": 0.571837842464447,
+      "mean_trust_drop": -0.006632506847381592,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.297441998810232,
+          "auroc_ci95": [
+            0.2178576740035693,
+            0.3856781677572873
+          ],
+          "average_precision": 0.4101508295755888,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": -0.5386903494596481
+        },
+        "relative": {
+          "auroc": 0.25364366448542536,
+          "auroc_ci95": [
+            0.17629573170731708,
+            0.3316515466983938
+          ],
+          "average_precision": 0.37785994168650355,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": 0.006689229607582096
+        }
+      }
+    },
+    "rain@cam4": {
+      "fault": "rain",
+      "camera_index": 4,
+      "camera": "CAM_BACK_LEFT",
+      "mean_trust_clean": 0.5605175495147705,
+      "mean_trust_faulted": 0.56767737865448,
+      "mean_trust_drop": -0.007159829139709473,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3505353955978584,
+          "auroc_ci95": [
+            0.25669244497323024,
+            0.44348602022605593
+          ],
+          "average_precision": 0.5235567772964221,
+          "detection_rate_at_0.05_fpr": 0.17073170731707318,
+          "threshold": -0.5350433021783829
+        },
+        "relative": {
+          "auroc": 0.2321534800713861,
+          "auroc_ci95": [
+            0.15570716835217133,
+            0.3173780487804878
+          ],
+          "average_precision": 0.4375342798513137,
+          "detection_rate_at_0.05_fpr": 0.08536585365853659,
+          "threshold": 0.014026787877082825
+        }
+      }
+    },
+    "rain@cam5": {
+      "fault": "rain",
+      "camera_index": 5,
+      "camera": "CAM_BACK_RIGHT",
+      "mean_trust_clean": 0.564924955368042,
+      "mean_trust_faulted": 0.5730319619178772,
+      "mean_trust_drop": -0.008107006549835205,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.28881618084473526,
+          "auroc_ci95": [
+            0.20493753718024985,
+            0.3743530636525877
+          ],
+          "average_precision": 0.40472723087398066,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": -0.5378487199544907
+        },
+        "relative": {
+          "auroc": 0.2479179060083284,
+          "auroc_ci95": [
+            0.17191775728732897,
+            0.32837968471148127
+          ],
+          "average_precision": 0.39385086957814874,
+          "detection_rate_at_0.05_fpr": 0.036585365853658534,
+          "threshold": 0.004863250255584718
+        }
+      }
+    },
+    "noise@cam0": {
+      "fault": "noise",
+      "camera_index": 0,
+      "camera": "CAM_FRONT",
+      "mean_trust_clean": 0.566419243812561,
+      "mean_trust_faulted": 0.5681140422821045,
+      "mean_trust_drop": -0.001694798469543457,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.37477691850089234,
+          "auroc_ci95": [
+            0.2880651397977394,
+            0.4718954491374182
+          ],
+          "average_precision": 0.5385806613552389,
+          "detection_rate_at_0.05_fpr": 0.17073170731707318,
+          "threshold": -0.5400703907012939
+        },
+        "relative": {
+          "auroc": 0.40392623438429504,
+          "auroc_ci95": [
+            0.31525133848899467,
+            0.4993158834027364
+          ],
+          "average_precision": 0.5286050766877982,
+          "detection_rate_at_0.05_fpr": 0.15853658536585366,
+          "threshold": 0.0022059410810470613
+        }
+      }
+    },
+    "noise@cam1": {
+      "fault": "noise",
+      "camera_index": 1,
+      "camera": "CAM_FRONT_LEFT",
+      "mean_trust_clean": 0.5618435740470886,
+      "mean_trust_faulted": 0.5643260478973389,
+      "mean_trust_drop": -0.002482473850250244,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.38310529446757885,
+          "auroc_ci95": [
+            0.29429654967281377,
+            0.481599494348602
+          ],
+          "average_precision": 0.5695576301215519,
+          "detection_rate_at_0.05_fpr": 0.24390243902439024,
+          "threshold": -0.5360421687364578
+        },
+        "relative": {
+          "auroc": 0.29863176680547293,
+          "auroc_ci95": [
+            0.20640615704937537,
+            0.3915861094586555
+          ],
+          "average_precision": 0.5226608514958272,
+          "detection_rate_at_0.05_fpr": 0.2073170731707317,
+          "threshold": 0.011551082134246826
+        }
+      }
+    },
+    "noise@cam2": {
+      "fault": "noise",
+      "camera_index": 2,
+      "camera": "CAM_FRONT_RIGHT",
+      "mean_trust_clean": 0.5656070113182068,
+      "mean_trust_faulted": 0.5710489153862,
+      "mean_trust_drop": -0.005441904067993164,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.35246876859012494,
+          "auroc_ci95": [
+            0.26647828673408686,
+            0.4460142772159429
+          ],
+          "average_precision": 0.47344135133122234,
+          "detection_rate_at_0.05_fpr": 0.0975609756097561,
+          "threshold": -0.5405351638793945
+        },
+        "relative": {
+          "auroc": 0.3004164187983343,
+          "auroc_ci95": [
+            0.21876859012492564,
+            0.3833358120166567
+          ],
+          "average_precision": 0.45150742134379374,
+          "detection_rate_at_0.05_fpr": 0.08536585365853659,
+          "threshold": 0.005939188599586489
+        }
+      }
+    },
+    "noise@cam3": {
+      "fault": "noise",
+      "camera_index": 3,
+      "camera": "CAM_BACK",
+      "mean_trust_clean": 0.5652053356170654,
+      "mean_trust_faulted": 0.5679601430892944,
+      "mean_trust_drop": -0.002754807472229004,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.35707911957168353,
+          "auroc_ci95": [
+            0.26620687091017253,
+            0.4542088042831648
+          ],
+          "average_precision": 0.5232563642758895,
+          "detection_rate_at_0.05_fpr": 0.17073170731707318,
+          "threshold": -0.5386903494596481
+        },
+        "relative": {
+          "auroc": 0.37418203450327187,
+          "auroc_ci95": [
+            0.28402736466389056,
+            0.46209473527662104
+          ],
+          "average_precision": 0.5042108113716899,
+          "detection_rate_at_0.05_fpr": 0.15853658536585366,
+          "threshold": 0.006689229607582096
+        }
+      }
+    },
+    "noise@cam4": {
+      "fault": "noise",
+      "camera_index": 4,
+      "camera": "CAM_BACK_LEFT",
+      "mean_trust_clean": 0.5605175495147705,
+      "mean_trust_faulted": 0.5632901787757874,
+      "mean_trust_drop": -0.0027726292610168457,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.3814693634741225,
+          "auroc_ci95": [
+            0.2867340868530637,
+            0.48483045806067815
+          ],
+          "average_precision": 0.5683534988119532,
+          "detection_rate_at_0.05_fpr": 0.24390243902439024,
+          "threshold": -0.5350433021783829
+        },
+        "relative": {
+          "auroc": 0.2685901249256395,
+          "auroc_ci95": [
+            0.1870872992266508,
+            0.36154818560380725
+          ],
+          "average_precision": 0.5229132495315384,
+          "detection_rate_at_0.05_fpr": 0.2073170731707317,
+          "threshold": 0.014026787877082825
+        }
+      }
+    },
+    "noise@cam5": {
+      "fault": "noise",
+      "camera_index": 5,
+      "camera": "CAM_BACK_RIGHT",
+      "mean_trust_clean": 0.564924955368042,
+      "mean_trust_faulted": 0.5662730932235718,
+      "mean_trust_drop": -0.0013481378555297852,
+      "n_frames": 82,
+      "detectors": {
+        "absolute": {
+          "auroc": 0.4111392028554432,
+          "auroc_ci95": [
+            0.31846743010113027,
+            0.5178576740035693
+          ],
+          "average_precision": 0.5814869096147341,
+          "detection_rate_at_0.05_fpr": 0.23170731707317074,
+          "threshold": -0.5378487199544907
+        },
+        "relative": {
+          "auroc": 0.44467578822129683,
+          "auroc_ci95": [
+            0.35663295657346816,
+            0.5461146638905413
+          ],
+          "average_precision": 0.5848411092575615,
+          "detection_rate_at_0.05_fpr": 0.21951219512195122,
+          "threshold": 0.004863250255584718
+        }
+      }
+    }
+  }
+}

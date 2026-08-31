@@ -1,0 +1,103 @@
+# OpenDriveFM validation CI.
+#
+# Design constraint: this must run on a clean runner with no nuScenes data and
+# no checkpoints, because neither is in the repository. So CI verifies the three
+# things that CAN be checked without them:
+#
+#   1. the C++ runtime primitives, including under ThreadSanitizer;
+#   2. the detection-metric implementations, against hand-computed values;
+#   3. the committed measurement artifacts, against release gates.
+#
+# (3) is the important one. Every eval in this repo writes JSON to
+# outputs/artifacts/. Gating those files means a regression cannot be committed
+# quietly: the numbers themselves are reviewed on every push.
+name: validation
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  cpp-runtime:
+    name: C++ runtime primitives
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S cpp -B cpp/build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build cpp/build -j
+      - name: Test
+        run: ctest --test-dir cpp/build --output-on-failure
+
+  cpp-thread-sanitizer:
+    name: C++ concurrency under ThreadSanitizer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # A lock-free SPSC queue and a seqlock can pass a functional test and
+      # still be racy. TSan is what actually checks the memory orderings.
+      - name: Configure with TSan
+        run: cmake -S cpp -B cpp/build-tsan -DCMAKE_BUILD_TYPE=Debug -DODFM_TSAN=ON
+      - name: Build
+        run: cmake --build cpp/build-tsan -j
+      - name: Run
+        run: ctest --test-dir cpp/build-tsan --output-on-failure
+
+  metrics-unit-tests:
+    name: Detection metric unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pytest
+      - run: python -m pytest tests/test_detection_metrics.py -q
+
+  test-suite-collects:
+    name: Whole test suite collects (no silent skips)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy pytest torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Collection must succeed
+        # A collection error is NOT a test failure: it means the suite did not
+        # run at all. tests/test_model.py imported a class that had been
+        # renamed, pytest aborted collection for the entire directory, and every
+        # other test in tests/ silently stopped running. This repo argues that a
+        # gate which cannot fail is decoration; a suite that cannot collect is
+        # the same thing one level up.
+        run: python -m pytest tests/ --collect-only -q
+      - name: Full suite
+        run: python -m pytest tests/ -q
+
+  release-gates:
+    name: Release gates on committed artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check gates
+        run: |
+          python scripts/ci/check_gates.py \
+            --detection outputs/artifacts/ood_detection_report_v11_trustfix2.json
+      - name: Guard against regression to a known-bad artifact
+        # The v11 baseline detector was significantly inverted. If the gates ever
+        # pass on it, the gates themselves have been weakened -- so assert the
+        # failure. A gate that cannot fail is decoration.
+        run: |
+          if python scripts/ci/check_gates.py \
+               --detection outputs/artifacts/ood_detection_report_v11.json; then
+            echo "::error::Gates passed on the known-inverted v11 baseline. The gates have been weakened."
+            exit 1
+          else
+            echo "Gates correctly reject the known-bad baseline."
+          fi

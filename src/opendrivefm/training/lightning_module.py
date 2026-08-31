@@ -7,12 +7,14 @@ Changes vs original:
   - Contrastive trust loss
 """
 from __future__ import annotations
+import random
 from dataclasses import dataclass
 from typing import Any
 import torch
 import torch.nn.functional as F
 import pytorch_lightning as pl
 from opendrivefm.models.model import OpenDriveFM
+from opendrivefm.robustness.perturbations import PERTURBATIONS
 
 
 def _dl_kwargs():
@@ -55,6 +57,9 @@ class LossCfg:
     resid_l2_w:        float = 0.01
     time_weight_power: float = 2.0    # stronger end-point weighting
     trust_w:           float = 0.05
+    entropy_w:         float = 0.1    # >0 REWARDS uniform trust across cameras,
+                                      # which directly opposes fault detection.
+                                      # Set 0.0 when training a usable detector.
     trust_target:      float = 0.75
     contrastive_w:     float = 0.10
     contrastive_margin: float = 0.20
@@ -63,18 +68,20 @@ class LossCfg:
 class LitOpenDriveFM(pl.LightningModule):
     def __init__(self, lr=3e-4, d=384, bev=64, horizon=12,
                  loss=None, weight_decay=1e-2, grad_clip=1.0,
-                 enable_trust=True):
+                 enable_trust=True, trust_contrastive=False, trust_grid=1):
         super().__init__()
         self.save_hyperparameters(ignore=["loss"])
         self.model = OpenDriveFM(
             d=d, bev_h=bev, bev_w=bev, horizon=horizon,
-            enable_trust=enable_trust)
+            enable_trust=enable_trust, trust_grid=trust_grid)
         self.lr           = lr
         self.weight_decay = weight_decay
         self.grad_clip    = grad_clip
         self.loss_cfg     = loss or LossCfg()
         self.horizon      = int(horizon)
         self.enable_trust = enable_trust
+        self.trust_contrastive = trust_contrastive
+        self._perturbers = [cls() for cls in PERTURBATIONS.values()]
 
     def forward(self, x, K=None, T_ego_cam=None):
         occ, traj, trust, _ = self.model(x, K, T_ego_cam)
@@ -146,19 +153,53 @@ class LitOpenDriveFM(pl.LightningModule):
     def _traj_residual_loss(self, traj_res, traj_t, cv_traj, t_rel):
         return self._traj_loss(traj_res, traj_t, cv_traj, t_rel)
 
-    def _trust_loss(self, trust, trust_aug=None):
-        """Trust regularisation + optional contrastive loss."""
+    def _trust_loss(self, trust, trust_aug=None, cam_idx=None):
+        """Trust regularisation + optional contrastive loss.
+
+        NOTE ON A PAST DEFECT: `_step` used to call this with `trust` only, so
+        the contrastive branch never executed and `l_cont` was logged as a
+        constant 0.0 in every run. The only live supervision was `reg_loss`,
+        which pulls trust to a constant and (via the entropy reward) pushes it
+        toward uniformity across cameras -- i.e. it trained the scorer to be
+        exactly the flat, non-discriminative function that measurement found.
+        """
         mean_dev = (trust.mean() - self.loss_cfg.trust_target) ** 2
         p        = trust / (trust.sum(dim=1, keepdim=True) + 1e-8)
         entropy  = -(p * (p + 1e-8).log()).sum(dim=1).mean()
-        reg_loss = mean_dev - 0.1 * entropy
+        reg_loss = mean_dev - self.loss_cfg.entropy_w * entropy
 
         if trust_aug is not None:
-            # Contrastive: clean trust should exceed augmented trust by margin
             margin = self.loss_cfg.contrastive_margin
-            cont   = F.relu(margin - (trust.mean(1) - trust_aug.mean(1))).mean()
+            if cam_idx is not None:
+                # Per-camera hinge on the camera that was actually corrupted.
+                # Averaging over all 6 cameras dilutes a single-camera fault by
+                # ~6x and gives almost no gradient signal.
+                idx   = cam_idx.view(-1, 1)
+                clean = trust.gather(1, idx).squeeze(1)
+                aug   = trust_aug.gather(1, idx).squeeze(1)
+            else:
+                clean, aug = trust.mean(1), trust_aug.mean(1)
+            cont = F.relu(margin - (clean - aug)).mean()
             return reg_loss + self.loss_cfg.contrastive_w * cont, cont
         return reg_loss, torch.tensor(0.0, device=trust.device)
+
+    def _augmented_trust(self, x):
+        """Score trust on a copy with ONE random camera randomly corrupted.
+
+        Returns (trust_aug, cam_idx). Only the trust scorer is re-run, not the
+        whole model, so this costs a fraction of a second forward pass.
+        Corrupts frame -1 because that is the frame the backbone scores.
+        """
+        imgs = x[:, :, -1].detach().clone()          # (B, V, C, H, W)
+        B, V = imgs.shape[0], imgs.shape[1]
+        cam_idx = torch.randint(0, V, (B,), device=x.device)
+        for b in range(B):
+            perturb = self._perturbers[random.randrange(len(self._perturbers))]
+            c = int(cam_idx[b])
+            imgs[b, c] = perturb(imgs[b, c].unsqueeze(0)).squeeze(0)
+        flat = imgs.reshape(B * V, *imgs.shape[2:])
+        trust_aug = self.model.backbone.trust_scorer(flat).reshape(B, V)
+        return trust_aug, cam_idx
 
     # ── Batch unpacking ───────────────────────────────────────
 
@@ -207,7 +248,11 @@ class LitOpenDriveFM(pl.LightningModule):
         l_traj = self._traj_loss(traj_res, traj_t, cv_traj, t_rel)
 
         if self.enable_trust:
-            l_trust, l_cont = self._trust_loss(trust)
+            if training and self.trust_contrastive:
+                trust_aug, cam_idx = self._augmented_trust(x)
+                l_trust, l_cont = self._trust_loss(trust, trust_aug, cam_idx)
+            else:
+                l_trust, l_cont = self._trust_loss(trust)
         else:
             l_trust = l_cont = torch.tensor(0.0, device=x.device)
 

@@ -1,0 +1,694 @@
+{
+  "vlm": "Salesforce/blip-image-captioning-base",
+  "cameras": [
+    0,
+    1
+  ],
+  "top_k": 15,
+  "n_captions": 60,
+  "discriminative_terms": [
+    {
+      "term": "line",
+      "log_odds": 1.8384242340851737,
+      "n_failing_images": 3,
+      "n_passing_images": 0
+    },
+    {
+      "term": "yellow",
+      "log_odds": 1.5019519974639608,
+      "n_failing_images": 2,
+      "n_passing_images": 0
+    },
+    {
+      "term": "front",
+      "log_odds": 1.358851153823287,
+      "n_failing_images": 6,
+      "n_passing_images": 1
+    },
+    {
+      "term": "tree",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "tracks",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "train",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "middle",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "fire",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "traveling",
+      "log_odds": 0.9911263736979699,
+      "n_failing_images": 1,
+      "n_passing_images": 0
+    },
+    {
+      "term": "building",
+      "log_odds": 0.8480255300572965,
+      "n_failing_images": 6,
+      "n_passing_images": 2
+    },
+    {
+      "term": "row",
+      "log_odds": 0.7398119454170637,
+      "n_failing_images": 3,
+      "n_passing_images": 1
+    },
+    {
+      "term": "parked",
+      "log_odds": 0.403339708795851,
+      "n_failing_images": 17,
+      "n_passing_images": 10
+    },
+    {
+      "term": "truck",
+      "log_odds": 0.1438285133107664,
+      "n_failing_images": 4,
+      "n_passing_images": 3
+    },
+    {
+      "term": "blur",
+      "log_odds": -0.1074859149701397,
+      "n_failing_images": 2,
+      "n_passing_images": 2
+    },
+    {
+      "term": "sign",
+      "log_odds": -0.10748591497014015,
+      "n_failing_images": 1,
+      "n_passing_images": 1
+    },
+    {
+      "term": "van",
+      "log_odds": -0.10748591497014015,
+      "n_failing_images": 1,
+      "n_passing_images": 1
+    },
+    {
+      "term": "dark",
+      "log_odds": -0.10748591497014015,
+      "n_failing_images": 1,
+      "n_passing_images": 1
+    },
+    {
+      "term": "white",
+      "log_odds": -0.2745399996333058,
+      "n_failing_images": 5,
+      "n_passing_images": 6
+    },
+    {
+      "term": "night",
+      "log_odds": -0.92846646703997,
+      "n_failing_images": 5,
+      "n_passing_images": 12
+    },
+    {
+      "term": "sitting",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "sky",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "parking",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "flying",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "bus",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "stop",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "couch",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "cat",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "man",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "bike",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "lot",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "bird",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "riding",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    },
+    {
+      "term": "black",
+      "log_odds": -1.2060982036382493,
+      "n_failing_images": 0,
+      "n_passing_images": 1
+    }
+  ],
+  "failing_captions": [
+    {
+      "manifest_index": 155,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0773831158876419,
+      "worst_fault": "blur",
+      "caption": "a street with a yellow line on the road"
+    },
+    {
+      "manifest_index": 155,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0773831158876419,
+      "worst_fault": "blur",
+      "caption": "a tree in the middle of a street"
+    },
+    {
+      "manifest_index": 132,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.06915319710969925,
+      "worst_fault": "noise",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 132,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.06915319710969925,
+      "worst_fault": "noise",
+      "caption": "a white truck parked in front of a building"
+    },
+    {
+      "manifest_index": 154,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.06636569648981094,
+      "worst_fault": "rain",
+      "caption": "a street with a yellow line on the road"
+    },
+    {
+      "manifest_index": 154,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.06636569648981094,
+      "worst_fault": "rain",
+      "caption": "a white truck parked on the side of a road"
+    },
+    {
+      "manifest_index": 295,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.05210266262292862,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 295,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.05210266262292862,
+      "worst_fault": "noise",
+      "caption": "a train is traveling down the tracks at night"
+    },
+    {
+      "manifest_index": 136,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0446290448307991,
+      "worst_fault": "noise",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 136,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0446290448307991,
+      "worst_fault": "noise",
+      "caption": "a row of cars parked in front of a building"
+    },
+    {
+      "manifest_index": 145,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.04416918382048607,
+      "worst_fault": "noise",
+      "caption": "a street with a car parked on the side of it"
+    },
+    {
+      "manifest_index": 145,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.04416918382048607,
+      "worst_fault": "noise",
+      "caption": "a car parked in front of a building"
+    },
+    {
+      "manifest_index": 123,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.04352932423353195,
+      "worst_fault": "occlusion",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 123,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.04352932423353195,
+      "worst_fault": "occlusion",
+      "caption": "a white truck parked on the side of a road"
+    },
+    {
+      "manifest_index": 307,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.04276974871754646,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 307,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.04276974871754646,
+      "worst_fault": "noise",
+      "caption": "a blur of a car"
+    },
+    {
+      "manifest_index": 133,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.04166461154818535,
+      "worst_fault": "rain",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 133,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.04166461154818535,
+      "worst_fault": "rain",
+      "caption": "a white van parked in front of a building"
+    },
+    {
+      "manifest_index": 319,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.03776625171303749,
+      "worst_fault": "rain",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 319,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.03776625171303749,
+      "worst_fault": "rain",
+      "caption": "a blur of a car"
+    },
+    {
+      "manifest_index": 147,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.03708995506167412,
+      "worst_fault": "noise",
+      "caption": "a street with a fire truck and a fire truck"
+    },
+    {
+      "manifest_index": 147,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.03708995506167412,
+      "worst_fault": "noise",
+      "caption": "a building with a sign on the front"
+    },
+    {
+      "manifest_index": 127,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.03604082763195038,
+      "worst_fault": "occlusion",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 127,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.03604082763195038,
+      "worst_fault": "occlusion",
+      "caption": "a row of cars parked on a street"
+    },
+    {
+      "manifest_index": 137,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.03471634164452553,
+      "worst_fault": "noise",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 137,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.03471634164452553,
+      "worst_fault": "noise",
+      "caption": "a row of parked cars in front of a building"
+    },
+    {
+      "manifest_index": 140,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.03442460671067238,
+      "worst_fault": "noise",
+      "caption": "a street with a white line on the road"
+    },
+    {
+      "manifest_index": 140,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.03442460671067238,
+      "worst_fault": "noise",
+      "caption": "a car parked on the side of a road"
+    },
+    {
+      "manifest_index": 311,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.034170255064964294,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 311,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.034170255064964294,
+      "worst_fault": "noise",
+      "caption": "a car is parked in the dark"
+    }
+  ],
+  "passing_captions": [
+    {
+      "manifest_index": 291,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.004324916750192642,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 291,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.004324916750192642,
+      "worst_fault": "noise",
+      "caption": "a dark night sky"
+    },
+    {
+      "manifest_index": 286,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.003880064934492111,
+      "worst_fault": "rain",
+      "caption": "a street with cars driving down it at night"
+    },
+    {
+      "manifest_index": 286,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.003880064934492111,
+      "worst_fault": "rain",
+      "caption": "a man riding a bike down a street at night"
+    },
+    {
+      "manifest_index": 159,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.003775507677346468,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street with a stop sign"
+    },
+    {
+      "manifest_index": 159,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.003775507677346468,
+      "worst_fault": "noise",
+      "caption": "a building with a parking lot"
+    },
+    {
+      "manifest_index": 283,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.002530757337808609,
+      "worst_fault": "blur",
+      "caption": "a car is driving down a street at night"
+    },
+    {
+      "manifest_index": 283,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.002530757337808609,
+      "worst_fault": "blur",
+      "caption": "a street with a car driving down it"
+    },
+    {
+      "manifest_index": 285,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.001964826136827469,
+      "worst_fault": "glare",
+      "caption": "a street with cars driving on it at night"
+    },
+    {
+      "manifest_index": 285,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.001964826136827469,
+      "worst_fault": "glare",
+      "caption": "a street with a car parked on it"
+    },
+    {
+      "manifest_index": 139,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0018775435164570808,
+      "worst_fault": "noise",
+      "caption": "a street with a few cars parked on it"
+    },
+    {
+      "manifest_index": 139,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0018775435164570808,
+      "worst_fault": "noise",
+      "caption": "a white car parked in front of a building"
+    },
+    {
+      "manifest_index": 298,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0011768192052841187,
+      "worst_fault": "glare",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 298,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0011768192052841187,
+      "worst_fault": "glare",
+      "caption": "a blur of a car driving on a road at night"
+    },
+    {
+      "manifest_index": 293,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0010393448173999786,
+      "worst_fault": "noise",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 293,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0010393448173999786,
+      "worst_fault": "noise",
+      "caption": "a black and white cat sitting on a couch"
+    },
+    {
+      "manifest_index": 152,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0008610626682639122,
+      "worst_fault": "occlusion",
+      "caption": "a white truck driving down a street next to a white truck"
+    },
+    {
+      "manifest_index": 152,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0008610626682639122,
+      "worst_fault": "occlusion",
+      "caption": "a white truck parked next to a white truck"
+    },
+    {
+      "manifest_index": 284,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.0008129142224788666,
+      "worst_fault": "blur",
+      "caption": "a street with cars and a bird flying over it"
+    },
+    {
+      "manifest_index": 284,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.0008129142224788666,
+      "worst_fault": "blur",
+      "caption": "a car driving down a road at night"
+    },
+    {
+      "manifest_index": 317,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": 0.000586431473493576,
+      "worst_fault": "occlusion",
+      "caption": "a car driving down a street at night"
+    },
+    {
+      "manifest_index": 317,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": 0.000586431473493576,
+      "worst_fault": "occlusion",
+      "caption": "a bus is driving down the street at night"
+    },
+    {
+      "manifest_index": 288,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT",
+      "sensitivity": -1.2625008821487427e-05,
+      "worst_fault": "occlusion",
+      "caption": "a street with a car driving down it"
+    },
+    {
+      "manifest_index": 288,
+      "scene": "scene-1077",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": -1.2625008821487427e-05,
+      "worst_fault": "occlusion",
+      "caption": "a blur of a car"
+    },
+    {
+      "manifest_index": 121,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": -0.0009362306445837021,
+      "worst_fault": "occlusion",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 121,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": -0.0009362306445837021,
+      "worst_fault": "occlusion",
+      "caption": "a white van parked on the side of a road"
+    },
+    {
+      "manifest_index": 124,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": -0.002405283972620964,
+      "worst_fault": "occlusion",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 124,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": -0.002405283972620964,
+      "worst_fault": "occlusion",
+      "caption": "a white truck parked on the side of a road"
+    },
+    {
+      "manifest_index": 138,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT",
+      "sensitivity": -0.0037447004579007626,
+      "worst_fault": "rain",
+      "caption": "a street with cars parked on it"
+    },
+    {
+      "manifest_index": 138,
+      "scene": "scene-0655",
+      "camera": "CAM_FRONT_LEFT",
+      "sensitivity": -0.0037447004579007626,
+      "worst_fault": "rain",
+      "caption": "a row of parked cars"
+    }
+  ],
+  "caveat": "BLIP is trained on web image-caption pairs, not driving scenes. Output is a hypothesis generator for which frames a human should open first, not a labeller. Term counts are small at this dataset size; the ranking is suggestive, not significant."
+}

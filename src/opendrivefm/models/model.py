@@ -103,38 +103,179 @@ class TemporalTransformer(nn.Module):
         return self.enc(x)
 
 
+def _grid_pool(x: torch.Tensor, g: int) -> torch.Tensor:
+    """Average-pool (B,C,H,W) into a GxG grid, for ANY H and W.
+
+    `AdaptiveAvgPool2d` is the obvious choice and is unusable here: on Apple MPS
+    it requires the input size to be divisible by the output size
+    (pytorch/pytorch#96056), and this model's trunk emits 6x10 feature maps that
+    no useful grid divides. Padding up to a multiple of g with replication and
+    using a fixed-kernel avg_pool2d is size-agnostic and runs on every backend.
+    """
+    h, w = x.shape[-2:]
+    ph, pw = (-h) % g, (-w) % g
+    if ph or pw:
+        x = F.pad(x, (0, pw, 0, ph), mode="replicate")
+    kh, kw = x.shape[-2] // g, x.shape[-1] // g
+    return F.avg_pool2d(x, kernel_size=(kh, kw), stride=(kh, kw))
+
+
 class CameraTrustScorer(nn.Module):
-    def __init__(self, in_ch=3, hidden=32):
+    """Per-camera trust in [0, 1].
+
+    WHY `grid` EXISTS
+    -----------------
+    The original scorer (grid=1) ends both of its branches in a whole-image
+    average: `AdaptiveAvgPool2d(1)` on the CNN branch, and `.mean()`/`.var()`
+    over the full frame on the statistics branch. Global averages are blind to
+    LOCALISED damage. `scripts/eval/eval_ood_detection.py` measured exactly that
+    failure: rain and noise, which shift statistics everywhere, reach AUROC
+    0.962 and 0.941, while occlusion -- an opaque patch covering 30-80% of one
+    region -- sits at 0.487, indistinguishable from chance. No amount of
+    retraining fixes it, because the feature the classifier would need has been
+    averaged away before it ever reaches the classifier.
+
+    grid > 1 pools over a GxG patch grid and feeds the head BOTH the mean and
+    the MINIMUM across patches. A dead region collapses edge energy in its own
+    patches while leaving the frame average almost untouched, so the min is the
+    statistic that sees it.
+
+    grid=1 reproduces the original architecture exactly, including tensor
+    shapes, so existing checkpoints keep loading.
+    """
+
+    def __init__(self, in_ch=3, hidden=32, grid: int = 1):
         super().__init__()
-        self.cnn = nn.Sequential(
+        self.grid = int(grid)
+        self.trunk = nn.Sequential(
             nn.Conv2d(in_ch, hidden, 5, stride=4, padding=2),
             nn.BatchNorm2d(hidden), nn.GELU(),
-            nn.Conv2d(hidden, hidden*2, 5, stride=4, padding=2),
-            nn.BatchNorm2d(hidden*2), nn.GELU(),
-            nn.AdaptiveAvgPool2d(1), nn.Flatten(),
-            nn.Linear(hidden*2, 16), nn.GELU(),
-            nn.Linear(16, 1), nn.Sigmoid(),
+            nn.Conv2d(hidden, hidden * 2, 5, stride=4, padding=2),
+            nn.BatchNorm2d(hidden * 2), nn.GELU(),
         )
+        if self.grid <= 1:
+            self.pool = nn.Sequential(nn.AdaptiveAvgPool2d(1), nn.Flatten())
+            cnn_feats, stat_feats = hidden * 2, 3
+        else:
+            self.pool = None                              # _grid_pool used instead
+            cnn_feats, stat_feats = hidden * 4, 6         # (mean, min) concatenated
+
+        self.cnn_head = nn.Sequential(
+            nn.Linear(cnn_feats, 16), nn.GELU(), nn.Linear(16, 1), nn.Sigmoid())
         self.stats_head = nn.Sequential(
-            nn.Linear(3, 16), nn.GELU(), nn.Linear(16, 1), nn.Sigmoid())
+            nn.Linear(stat_feats, 16), nn.GELU(), nn.Linear(16, 1), nn.Sigmoid())
         self.fuse = nn.Sequential(nn.Linear(2, 1), nn.Sigmoid())
-        lap = torch.tensor([[0.,1.,0.],[1.,-4.,1.],[0.,1.,0.]]).view(1,1,3,3)
-        sx  = torch.tensor([[-1.,0.,1.],[-2.,0.,2.],[-1.,0.,1.]]).view(1,1,3,3)
+
+        lap = torch.tensor([[0., 1., 0.], [1., -4., 1.], [0., 1., 0.]]).view(1, 1, 3, 3)
+        sx = torch.tensor([[-1., 0., 1.], [-2., 0., 2.], [-1., 0., 1.]]).view(1, 1, 3, 3)
         self.register_buffer("_lap", lap)
-        self.register_buffer("_sx",  sx)
+        self.register_buffer("_sx", sx)
+
+        # Running centre for the statistics branch. See _image_stats for why.
+        self.stat_momentum = 0.1
+        self.register_buffer("stat_running_mean", torch.zeros(stat_feats))
+        self.register_buffer("stat_calibrated", torch.zeros((), dtype=torch.bool))
+
+    # ── statistics branch ────────────────────────────────────────────────────
+
+    def _response_maps(self, x):
+        """Laplacian, luminance and Sobel-edge response maps, all (B,1,H,W)."""
+        gray = x.mean(dim=1, keepdim=True)
+        lap = F.conv2d(gray, self._lap, padding=1)
+        ex = F.conv2d(gray, self._sx, padding=1)
+        ey = F.conv2d(gray, self._sx.transpose(-1, -2), padding=1)
+        edge = (ex ** 2 + ey ** 2).sqrt()
+        return lap, gray, edge
 
     def _image_stats(self, x):
-        gray = x.mean(dim=1, keepdim=True)
-        blur = F.conv2d(gray, self._lap, padding=1).var(dim=[1,2,3])
-        lum  = gray.mean(dim=[1,2,3])
-        ex   = F.conv2d(gray, self._sx, padding=1)
-        ey   = F.conv2d(gray, self._sx.transpose(-1,-2), padding=1)
-        edge = (ex**2 + ey**2).sqrt().mean(dim=[1,2,3])
-        stats = torch.stack([blur, lum, edge], dim=1)
-        return torch.sigmoid(stats - stats.detach().mean(dim=0))
+        stats = self._raw_stats(x)          # compute once; it is not cheap
+        return torch.sigmoid(stats - self._stat_centre(stats))
+
+    def _raw_stats(self, x):
+        """The uncentred statistics. Exposed so calibration can average them
+        over a dataset without running the model in train mode, which would
+        also move the trunk's BatchNorm running statistics."""
+        lap, gray, edge = self._response_maps(x)
+        if self.grid <= 1:
+            blur = lap.var(dim=[1, 2, 3])
+            lum = gray.mean(dim=[1, 2, 3])
+            edg = edge.mean(dim=[1, 2, 3])
+            stats = torch.stack([blur, lum, edg], dim=1)
+        else:
+            g = self.grid
+            # Per-patch statistics. Laplacian VARIANCE per patch is E[l^2]-E[l]^2
+            # computed patchwise, which is what average-pooling the squared and
+            # raw maps gives us.
+            l1 = _grid_pool(lap, g).flatten(1)
+            l2 = _grid_pool(lap ** 2, g).flatten(1)
+            blur_p = (l2 - l1 ** 2).clamp_min(0.0)
+            lum_p = _grid_pool(gray, g).flatten(1)
+            edge_p = _grid_pool(edge, g).flatten(1)
+            # mean AND min across patches: the min is what a localised dead
+            # region moves, and the mean is what a global corruption moves.
+            stats = torch.cat([
+                blur_p.mean(1, keepdim=True), blur_p.min(1, keepdim=True).values,
+                lum_p.mean(1, keepdim=True), lum_p.min(1, keepdim=True).values,
+                edge_p.mean(1, keepdim=True), edge_p.min(1, keepdim=True).values,
+            ], dim=1)
+        return stats
+
+    def _stat_centre(self, stats: torch.Tensor) -> torch.Tensor:
+        """The value the statistics are centred on, and the reason trust used to
+        depend on batch composition.
+
+        This was `stats.detach().mean(dim=0)`: the mean over the BATCH axis. The
+        scorer sees every camera of every frame in one call, so a camera's trust
+        was a function of its pixels *relative to the other B*V-1 images that
+        happened to share the forward pass. Two consequences:
+
+          - the same frame scored differently depending on what it was batched
+            with, so a score was not a property of the frame;
+          - effect sizes such as `mean_trust_drop` moved 36% across batch sizes
+            1 to 8, because the faulted camera is itself part of the mean it is
+            measured against.
+
+        Ranking metrics (AUROC) survived that, since every score in one sweep
+        shared the same reference. Anything absolute did not.
+
+        The fix is the one BatchNorm already uses for exactly this problem:
+        accumulate a running estimate while training, and FREEZE it at eval, so
+        inference is a pure function of one input. The centre is deliberately a
+        mean only, with no variance scaling, so a calibrated model reproduces
+        the original function up to the choice of reference rather than
+        rescaling its inputs and invalidating the trained heads.
+
+        `stat_calibrated` is false until a calibration pass has run. An
+        uncalibrated model falls back to the old batch-relative behaviour rather
+        than centring on a meaningless zero, and `scripts/eval/*` refuse to
+        report numbers from it unless explicitly told to.
+        """
+        if self.training:
+            batch_mean = stats.detach().mean(dim=0)
+            with torch.no_grad():
+                if self.stat_calibrated:
+                    self.stat_running_mean.mul_(1 - self.stat_momentum).add_(
+                        batch_mean, alpha=self.stat_momentum)
+                else:
+                    # First observation initialises rather than decaying from 0,
+                    # which would otherwise take many steps to forget.
+                    self.stat_running_mean.copy_(batch_mean)
+                    self.stat_calibrated.fill_(True)
+            return batch_mean
+        if self.stat_calibrated:
+            return self.stat_running_mean
+        return stats.detach().mean(dim=0)
+
+    # ── forward ──────────────────────────────────────────────────────────────
 
     def forward(self, x):
-        cnn_s  = self.cnn(x)
+        f = self.trunk(x)
+        if self.grid <= 1:
+            feats = self.pool(f)
+        else:
+            p = _grid_pool(f, self.grid).flatten(2)           # (B, C, G*G)
+            feats = torch.cat([p.mean(-1), p.min(-1).values], dim=1)
+        cnn_s = self.cnn_head(feats)
         stat_s = self.stats_head(self._image_stats(x))
         return self.fuse(torch.cat([cnn_s, stat_s], dim=1)).squeeze(1)
 
@@ -273,8 +414,20 @@ class BEVWarpAndAccumulate(nn.Module):
 class MultiViewTemporalBackbone(nn.Module):
     FEAT_CH = 192
 
-    def __init__(self, d=384, enable_trust=True, n_frames=4):
+    def __init__(self, d=384, enable_trust=True, n_frames=4, trust_grid=1,
+                 nheads=6):
         super().__init__()
+        # nheads was hardcoded to 6, which silently restricted `d` to multiples
+        # of 6 and surfaced as a bare "embed_dim must be divisible by num_heads"
+        # from inside nn.MultiheadAttention, several frames below the actual
+        # mistake. Fail here instead, where the caller can see which of their
+        # arguments is wrong.
+        if d % nheads:
+            raise ValueError(
+                f"d={d} is not divisible by nheads={nheads}. The transformer "
+                f"splits d into nheads attention heads. Pass a compatible pair, "
+                f"e.g. d=384 with nheads=6 (the trained configuration), or "
+                f"d={d} with nheads={next((h for h in (8,6,4,2,1) if d % h == 0), 1)}.")
         self.enable_trust = enable_trust
         self.n_frames     = n_frames
         C = self.FEAT_CH
@@ -289,8 +442,8 @@ class MultiViewTemporalBackbone(nn.Module):
             nn.AdaptiveAvgPool2d((1,1)), nn.Flatten(), nn.Linear(C, d))
 
         # Per-frame transformer (applied independently per frame)
-        self.temporal     = TemporalTransformer(d=d, nheads=6, nlayers=4)
-        self.trust_scorer = CameraTrustScorer()
+        self.temporal     = TemporalTransformer(d=d, nheads=nheads, nlayers=4)
+        self.trust_scorer = CameraTrustScorer(grid=trust_grid)
         self.trust_fuse   = TrustWeightedFusion(d=d)
         self.view_fuse    = nn.Sequential(nn.Linear(d,d), nn.GELU(), nn.Linear(d,d))
 
@@ -402,11 +555,18 @@ class OpenDriveFM(nn.Module):
         model(x, lidar_depth_maps=ldm, ego_deltas=d)→ + depth supervision
     """
     def __init__(self, d=384, bev_h=128, bev_w=128, horizon=12,
-                 enable_trust=True, n_frames=4):
+                 enable_trust=True, n_frames=4, trust_grid=1, nheads=6):
         super().__init__()
-        assert bev_h == 128, "v11 requires bev_h=128"
+        if bev_h != 128 or bev_w != 128:
+            raise ValueError(
+                f"v11 requires bev_h=bev_w=128, got {bev_h}x{bev_w}. "
+                f"BEVOccupancyHead128 emits a fixed 128x128 grid, and the "
+                f"nuscenes_labels_128 label set matches it. Older code and "
+                f"checkpoints used 64; those are not compatible with this tree.")
         self.backbone = MultiViewTemporalBackbone(d=d, enable_trust=enable_trust,
-                                                  n_frames=n_frames)
+                                                  n_frames=n_frames,
+                                                  trust_grid=trust_grid,
+                                                  nheads=nheads)
         self.occ      = BEVOccupancyHead128(d=d)
         self.traj     = TrajHead(d=d, horizon=horizon)
 

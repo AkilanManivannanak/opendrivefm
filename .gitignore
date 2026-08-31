@@ -10,7 +10,13 @@ venv/
 .DS_Store
 
 # Experiment / generated
-outputs/
+# NOTE: `outputs/` alone cannot be selectively un-ignored. Git does not descend
+# into an excluded DIRECTORY, so a later `!outputs/artifacts/x.json` is never
+# even considered. The exclusion must be written per-entry so the directory
+# itself stays traversable.
+outputs/*
+!outputs/artifacts/
+outputs/artifacts/*
 lightning_logs/
 
 # Data
@@ -23,7 +29,42 @@ dataset/
 *.pth
 *.zip
 
+# Build trees
+# `scripts/build/` was listed but `cpp/` did not exist when this was written.
+# A CMake build dir carries object files, compiled binaries, absolute paths from
+# the machine that configured it, and a CMakeCache.txt that actively breaks a
+# build on any other machine. It is generated output, never source.
+scripts/build/
+cpp/build/
+**/CMakeFiles/
+**/CMakeCache.txt
+*.o
+*.a
+*.so
+*.dylib
+
 # Optional
 .env
-scripts/build/
 .Rhistory
+
+# Editor/agent backups
+*.bak
+*.bak[0-9]*
+*.bak.*
+
+# Evidence for the README and the CI release gates.
+#
+# outputs/ is ignored above because it holds checkpoints, LiDAR manifests and a
+# 350MB road_assets.json. But .github/workflows/validation.yml runs the release
+# gates on "committed artifacts", and the README cites a JSON file for every
+# number it reports. If those files are not in the repo, the gate job cannot run
+# and no reader can check a single claim.
+#
+# So the small detection/validation reports are un-ignored deliberately. Keep
+# this list explicit: never blanket-unignore outputs/artifacts/*.json, or the
+# 350MB file lands in git history where it cannot be removed.
+!outputs/artifacts/ood_detection_report*.json
+!outputs/artifacts/batch_contamination*.json
+!outputs/artifacts/conformal_trajectory.json
+!outputs/artifacts/per_camera_fault_ranking.json
+!outputs/artifacts/failure_triage_vlm.json

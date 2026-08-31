@@ -40,7 +40,7 @@ def get_nusc():
     global _nusc_cache
     if _nusc_cache is not None:
         return _nusc_cache
-    if not _NUSC_AVAILABLE:
+    if True or not _NUSC_AVAILABLE:
         return None
     import os
     import os
@@ -83,25 +83,152 @@ def _load_bev_precomputed():
     _bev_precomputed_cache = {}
     return _bev_precomputed_cache
 
+_lidar_manifest_cache = None
+
+def _load_lidar_manifest():
+    global _lidar_manifest_cache
+    if _lidar_manifest_cache is None:
+        lp = ROOT / "outputs/artifacts/lidar_manifest.json"
+        try:
+            _lidar_manifest_cache = json.loads(lp.read_text()) if lp.exists() else {}
+            print(f"[LIDAR] manifest entries: {len(_lidar_manifest_cache)}")
+        except Exception as e:
+            print(f"[LIDAR] manifest load failed: {e}")
+            _lidar_manifest_cache = {}
+    return _lidar_manifest_cache
+
+
+SHOW_OCC = False   # occupancy overlay toggle
+
+_lidar_manifest_cache = None
+
+def _load_lidar_manifest():
+    global _lidar_manifest_cache
+    if _lidar_manifest_cache is None:
+        lp = ROOT / "outputs/artifacts/lidar_manifest.json"
+        try:
+            _lidar_manifest_cache = json.loads(lp.read_text()) if lp.exists() else {}
+            print(f"[LIDAR] manifest entries: {len(_lidar_manifest_cache)}")
+        except Exception as e:
+            print(f"[LIDAR] manifest load failed: {e}")
+            _lidar_manifest_cache = {}
+    return _lidar_manifest_cache
+
+
+def _ego_yaw(sample_token):
+    """Ego heading in the global frame, radians."""
+    m = _load_lidar_manifest().get(sample_token)
+    if m is None:
+        return None
+    try:
+        from pyquaternion import Quaternion
+        return Quaternion(m["ego_rot"]).yaw_pitch_roll[0]
+    except Exception:
+        return None
+
+
+def render_lidar_bev(sample_token, size=420, bev_range=20.0):
+    """Accumulate N lidar sweeps into the keyframe ego frame and rasterize.
+    Ground returns -> grey road surface (carries lane paint).
+    Structure returns -> brighter layer.
+    Convention matches draw_bev: +x forward = up, +y left."""
+    canvas = np.zeros((size, size, 3), np.uint8) + 15
+    try:
+        from pyquaternion import Quaternion
+        m = _load_lidar_manifest().get(sample_token)
+        if m is None:
+            return canvas
+
+        R_ref = Quaternion(m["ego_rot"]).rotation_matrix
+        t_ref = np.array(m["ego_trans"], dtype=np.float64)
+
+        frames = [m] + m.get("sweeps", [])
+        all_xyz, all_int = [], []
+
+        for f in frames:
+            lf = ROOT / f["path"]
+            if not lf.exists():
+                continue
+            pts = np.fromfile(str(lf), dtype=np.float32).reshape(-1, 5)
+            xyz = pts[:, :3].astype(np.float64)
+            inten = pts[:, 3]
+
+            # sensor -> ego_i -> global -> ego_ref
+            Rc = Quaternion(f["cal_rot"]).rotation_matrix
+            xyz = xyz @ Rc.T + np.array(f["cal_trans"])
+            Re = Quaternion(f["ego_rot"]).rotation_matrix
+            xyz = xyz @ Re.T + np.array(f["ego_trans"])
+            xyz = (xyz - t_ref) @ R_ref
+
+            all_xyz.append(xyz)
+            all_int.append(inten)
+
+        if not all_xyz:
+            return canvas
+        xyz = np.concatenate(all_xyz)
+        inten = np.concatenate(all_int)
+
+        keep = ((np.abs(xyz[:, 0]) < bev_range) &
+                (np.abs(xyz[:, 1]) < bev_range) &
+                (xyz[:, 2] > -2.0) & (xyz[:, 2] < 3.0))
+        xyz, inten = xyz[keep], inten[keep]
+        if len(xyz) == 0:
+            return canvas
+
+        sc = size / (2.0 * bev_range)
+        px = np.clip((size // 2 + xyz[:, 1] * sc).astype(np.int32), 0, size - 1)
+        py = np.clip((size // 2 - xyz[:, 0] * sc).astype(np.int32), 0, size - 1)
+
+        ground = xyz[:, 2] < 0.4
+        grey = np.zeros((size, size), np.float32)
+        stru = np.zeros((size, size), np.float32)
+
+        v = np.clip(inten / 48.0, 0.0, 1.0)
+        np.maximum.at(grey, (py[ground], px[ground]), v[ground])
+        np.maximum.at(stru, (py[~ground], px[~ground]), 1.0)
+
+        g8 = (np.clip(grey, 0, 1) * 150 + 30).astype(np.uint8)
+        g8[grey <= 0] = 15
+        g8 = cv2.morphologyEx(g8, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+        out = cv2.cvtColor(g8, cv2.COLOR_GRAY2BGR)
+
+        sm = stru > 0
+        out[sm] = np.clip(out[sm].astype(np.int32) + 70, 0, 255).astype(np.uint8)
+
+        print(f"[LIDAR] {len(frames)} sweeps, {len(xyz)} pts")
+        return out
+    except Exception as e:
+        print(f"[LIDAR] render error: {e}")
+        return canvas
+
+
 def get_bev_annotations(sample_token, ego_xy, bev_range=20.0, size=400):
     import numpy as np
     sc = size / (2.0 * bev_range)
     cx = cy = size // 2
     result = {'boxes': [], 'map_patches': []}
-    if not sample_token or ego_xy is None:
+    if not sample_token:
         return result
     data = _load_bev_precomputed()
     entry = data.get(sample_token)
     if entry is None:
         return result
+    if ego_xy is None:
+        ego_xy = entry.get('ego_xy')
+    if ego_xy is None:
+        return result
     ego_x, ego_y = float(ego_xy[0]), float(ego_xy[1])
+    _yaw = _ego_yaw(sample_token)
+    _c, _s = (np.cos(_yaw), np.sin(_yaw)) if _yaw is not None else (1.0, 0.0)
     for box in entry.get('boxes', []):
         t = box['translation']
         dx, dy = t[0]-ego_x, t[1]-ego_y
         if abs(dx) > bev_range*1.3 or abs(dy) > bev_range*1.3:
             continue
-        px = int(cx + dy*sc)
-        py = int(cy - dx*sc)
+        xe =  _c*dx + _s*dy
+        ye = -_s*dx + _c*dy
+        px = int(cx + ye*sc)
+        py = int(cy - xe*sc)
         cat = box['category']
         if 'car' in cat or 'truck' in cat or 'bus' in cat:
             color=(0,255,0); label='CAR'
@@ -110,7 +237,7 @@ def get_bev_annotations(sample_token, ego_xy, bev_range=20.0, size=400):
         elif 'human' in cat or 'pedestrian' in cat:
             color=(0,120,255); label='PED'
         else:
-            color=(180,180,180); label=cat.split('.')[-1][:4].upper()
+            continue
         w_px = max(4, int(box['size'][0]*sc))
         l_px = max(6, int(box['size'][1]*sc))
         result['boxes'].append({'px':px,'py':py,'pw':w_px,'pl':l_px,
@@ -358,13 +485,84 @@ def compute_ablation_live(occ, gt_occ, trust, fault_per_cam):
 
 # ── Draw BEV ─────────────────────────────────────────────────────────────────
 
+SHOW_ASSETS = True
+
+_assets_cache = None
+
+def _load_assets():
+    global _assets_cache
+    if _assets_cache is None:
+        ap = ROOT / "outputs/artifacts/road_assets.json"
+        try:
+            _assets_cache = json.loads(ap.read_text()) if ap.exists() else {}
+            print(f"[ASSETS] entries: {len(_assets_cache)}")
+        except Exception as e:
+            print(f"[ASSETS] load failed: {e}")
+            _assets_cache = {}
+    return _assets_cache
+
+
+ASSET_STYLE = {
+    "traffic_light": ((0, 200, 255), "TL"),
+    "traffic_sign":  ((0, 140, 255), "SN"),
+    "pole":          ((200, 200, 200), "PL"),
+    "guardrail":     ((160, 160, 60), "GR"),
+}
+
+
+def draw_road_assets(img, sample_token, size=420, bev_range=20.0):
+    """Overlay camera-detected surfaces, curbs and upright assets (ego frame)."""
+    if not SHOW_ASSETS:
+        return img
+    try:
+        e = _load_assets().get(sample_token)
+        if e is None:
+            return img
+        sc = size / (2.0 * bev_range)
+        cx = cy = size // 2
+
+        def topx(x, y):
+            return int(cx + y * sc), int(cy - x * sc)
+
+        surf = e.get("surfaces", {})
+        for name, col, rad in (("curb", (0, 215, 255), 1),):
+            pts = surf.get(name, [])
+            stride = max(1, len(pts) // 250)
+            for x, y in pts[::stride]:
+                u, v = topx(x, y)
+                if 0 <= u < size and 0 <= v < size:
+                    cv2.circle(img, (u, v), rad, col, -1)
+
+        for a in e.get("assets", []):
+            if a["cls"] not in ("traffic_light", "traffic_sign"):
+                continue
+            if abs(a["x"]) > 18 or abs(a["y"]) > 18:
+                continue
+            # real signs/lights sit off the drivable corridor, not on it
+            if abs(a["y"]) < 3.0:
+                continue
+            col, tag = ASSET_STYLE.get(a["cls"], ((150, 150, 150), "?"))
+            u, v = topx(a["x"], a["y"])
+            if not (4 <= u < size - 4 and 4 <= v < size - 4):
+                continue
+            cv2.circle(img, (u, v), 4, col, -1)
+            cv2.circle(img, (u, v), 6, col, 1)
+            cv2.putText(img, tag, (u + 7, v + 3),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.3, col, 1, cv2.LINE_AA)
+        return img
+    except Exception as ex:
+        print(f"[ASSETS] draw error: {ex}")
+        return img
+
+
 def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
              size=400, mode="T", llm_traj=None,
              show_forecast=False, forecast_frame="t+1 (0.5s ahead)",
              sparse_mode="dense",
              sample_token=None, ego_xy=None,
              vlm_caption=None) -> np.ndarray:
-    img = np.zeros((size,size,3), np.uint8) + 15
+    img = render_lidar_bev(sample_token, size=size, bev_range=20.0)
+    img = draw_road_assets(img, sample_token, size=size, bev_range=20.0)
     # Grid
     for i in range(0, size, size//8):
         cv2.line(img,(i,0),(i,size),(28,28,28),1)
@@ -373,10 +571,12 @@ def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
     # Prediction heatmap
     pred = np.where(occ > OCC_THRESHOLD, occ, 0.0)
     pred_up = cv2.resize(pred, (size,size), interpolation=cv2.INTER_NEAREST)
-    u8 = (pred_up*255).astype(np.uint8)
-    heat = cv2.applyColorMap(u8, cv2.COLORMAP_HOT)
-    mask = (pred_up > OCC_THRESHOLD)[...,None].astype(np.float32)
-    img = np.where(mask>0, heat, img).astype(np.uint8)
+    if SHOW_OCC:
+        _m = pred_up > OCC_THRESHOLD
+        if _m.any():
+            _ov = np.zeros_like(img); _ov[_m] = (190, 120, 0)
+            _a = 0.30
+            img[_m] = (img[_m]*(1-_a) + _ov[_m]*_a).astype(np.uint8)
     # GT overlay disabled - labels are too dense for visualization
     # Distance rings
     cx,cy = size//2,size//2
@@ -387,7 +587,7 @@ def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
                    cv2.FONT_HERSHEY_SIMPLEX,0.3,(60,60,60),1)
     print(f'[BEV TRACE] heatmap+rings drawn ok, about to do annotations sample_token={sample_token}')
     # ── HD Map + 3D Boxes + LiDAR (nuScenes features) ────────────────────────
-    if sample_token and ego_xy is not None:
+    if sample_token:
       try:
         anns = get_bev_annotations(sample_token, ego_xy, bev_range=20.0, size=size)
 
@@ -408,9 +608,9 @@ def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
                 py_t = int(np.clip(cy - xv*sc, 4, size-4))
                 corridor_pts.append((px_t, py_t))
             # Draw corridor as thick semi-transparent red path
-            corridor_w = max(3, int(1.5 * sc))
+            corridor_w = max(1, int(0.35 * sc))
             for i in range(len(corridor_pts)-1):
-                cv2.line(img, corridor_pts[i], corridor_pts[i+1], (0, 0, 180), corridor_w*2, cv2.LINE_AA)
+                cv2.line(img, corridor_pts[i], corridor_pts[i+1], (0, 0, 130), corridor_w, cv2.LINE_AA)
             # Overlay thinner bright red line on top
             for i in range(len(corridor_pts)-1):
                 cv2.line(img, corridor_pts[i], corridor_pts[i+1], (50, 50, 255), 1, cv2.LINE_AA)
@@ -426,32 +626,35 @@ def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
             y0 = int(np.clip(py_b - pl2, 0, size-1))
             x1 = int(np.clip(px_b + pw2, 0, size-1))
             y1 = int(np.clip(py_b + pl2, 0, size-1))
-            cv2.rectangle(img, (x0, y0), (x1, y1), box["color"], 2)
+            cv2.rectangle(img, (x0, y0), (x1, y1), box["color"], 1)
             # Corner dots for 3D box feel
-            for corner in [(x0,y0),(x1,y0),(x0,y1),(x1,y1)]:
-                cv2.circle(img, corner, 2, box["color"], -1)
+            pass  # corner dots removed
 
         # Feature 4: Object labels + speed
-        for box in anns["boxes"]:
+        _cand = [b for b in anns["boxes"]
+                 if 0 < b["px"] < size and 0 < b["py"] < size]
+        _cand.sort(key=lambda b: (b["px"]-cx)**2 + (b["py"]-cy)**2)
+        _taken = []
+        for box in _cand[:10]:
             px_b, py_b = box["px"], box["py"]
-            if not (0 < px_b < size and 0 < py_b < size):
+            if any(abs(px_b-a) < 46 and abs(py_b-b2) < 13 for a, b2 in _taken):
                 continue
+            _taken.append((px_b, py_b))
             label = box["label"]
             speed = box["speed"]
-            if speed > 0.3:
-                label_text = f"{label} {speed:.1f}m/s"
-            else:
-                label_text = label
+            label_text = f"{label} {speed:.0f}" if speed > 1.0 else label
             # Small label above box
             lx = int(np.clip(px_b - box["pw"]//2, 2, size-60))
             ly = int(np.clip(py_b - box["pl"]//2 - 4, 10, size-4))
+            (_tw, _th), _ = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.3, 1)
+            cv2.rectangle(img, (lx-2, ly-_th-2), (lx+_tw+2, ly+2), (0, 0, 0), -1)
             cv2.putText(img, label_text, (lx, ly),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.25, box["color"], 1, cv2.LINE_AA)
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.3, box["color"], 1, cv2.LINE_AA)
       except Exception as _bev_e:
           print(f'[BEV] annotation drawing error (non-fatal): {_bev_e}')
 
     # Feature 5: Ego vehicle (white car shape — rectangle with direction arrow)
-    car_w, car_l = int(1.0*sc), int(2.2*sc)
+    car_w, car_l = max(2,int(0.85*sc)), max(4,int(2.05*sc))
     cv2.rectangle(img, (cx-car_w, cy-car_l), (cx+car_w, cy+car_l), (255,255,255), -1)
     cv2.rectangle(img, (cx-car_w, cy-car_l), (cx+car_w, cy+car_l), (200,200,200), 1)
     # Direction arrow (forward = up in BEV)
@@ -505,7 +708,7 @@ def draw_bev(occ, traj, trust, fault_per_cam, gt_occ,
     sp_col = sparse_colors.get(sparse_key,(120,120,120))
     sp_pct = {"dense":"46%","strided":"64%","local":"73%","combined":"58%"}.get(sparse_key,"?")
     # Draw sparse attention pattern visualization on BEV corner
-    pat_size = 28
+    pat_size = 0  # widget disabled
     pat_x, pat_y = size-pat_size-4, 30
     cv2.rectangle(img,(pat_x,pat_y),(pat_x+pat_size,pat_y+pat_size),(20,20,20),-1)
     cv2.rectangle(img,(pat_x,pat_y),(pat_x+pat_size,pat_y+pat_size),sp_col,1)

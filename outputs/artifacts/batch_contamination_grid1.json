@@ -1,0 +1,68 @@
+{
+  "checkpoint": {
+    "path": "outputs/artifacts/checkpoints_v11_trustfix2/trust_fixed_v2.ckpt",
+    "weights_matched": 169,
+    "weights_expected": 171,
+    "match_rate": 0.9883040935672515,
+    "missing_trust_keys": 0,
+    "trust_stats_calibrated": false,
+    "unexpected_keys": 0
+  },
+  "fault": "occlusion",
+  "faulted_camera": 0,
+  "trust_grid": 1,
+  "val_scenes": [
+    "scene-0655",
+    "scene-1077"
+  ],
+  "sweep": [
+    {
+      "batch_size": 1,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.016019245609641075,
+      "mean_abs_delta_untouched_cams": 6.508536216642824e-07,
+      "contamination_ratio": 4.062948015932601e-05,
+      "max_abs_delta_untouched_cams": 2.4437904357910156e-06,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 2,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.01601930893957615,
+      "mean_abs_delta_untouched_cams": 4.1236236825170636e-07,
+      "contamination_ratio": 2.5741582848992546e-05,
+      "max_abs_delta_untouched_cams": 1.9073486328125e-06,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 4,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.01601928099989891,
+      "mean_abs_delta_untouched_cams": 3.490506230718893e-07,
+      "contamination_ratio": 2.1789406345646348e-05,
+      "max_abs_delta_untouched_cams": 1.519918441772461e-06,
+      "verdict": "negligible"
+    },
+    {
+      "batch_size": 8,
+      "n_frames": 82,
+      "n_cameras": 6,
+      "mean_abs_delta_faulted_cam": 0.016019321978092194,
+      "mean_abs_delta_untouched_cams": 3.245545485697221e-07,
+      "contamination_ratio": 2.0260192598262177e-05,
+      "max_abs_delta_untouched_cams": 1.0132789611816406e-06,
+      "verdict": "negligible"
+    }
+  ],
+  "worst_ratio": 4.062948015932601e-05,
+  "frame_purity": {
+    "reference_batch_size": 1,
+    "worst_batch_size": 8,
+    "max_abs_trust_delta": 0.00012058019638061523
+  },
+  "faulted_effect_size_spread": 4.767271125638756e-06,
+  "trend": "is negligible at every batch size, so no trend is claimed (comparing near-zero ratios would be reading noise)"
+}

@@ -1,0 +1,126 @@
+{
+  "baseline_iou": 0.03869455177822946,
+  "baseline_ade": 28.753252063478744,
+  "results": [
+    {
+      "cam_idx": 3,
+      "cam_name": "CAM_BACK",
+      "fault_type": "blackout",
+      "IoU": 0.03486600821789327,
+      "ADE": 28.612542050225393,
+      "IoU_drop": 0.003828543560336191,
+      "ADE_increase": -0.14071001325335075,
+      "trust_faulted": 0.6590607137907118
+    },
+    {
+      "cam_idx": 4,
+      "cam_name": "CAM_BACK_LEFT",
+      "fault_type": "blackout",
+      "IoU": 0.03579411464095675,
+      "ADE": 28.747109776451474,
+      "IoU_drop": 0.002900437137272713,
+      "ADE_increase": -0.006142287027270044,
+      "trust_faulted": 0.6590684226581028
+    },
+    {
+      "cam_idx": 1,
+      "cam_name": "CAM_FRONT_LEFT",
+      "fault_type": "blackout",
+      "IoU": 0.03636711111907207,
+      "ADE": 28.6585487978799,
+      "IoU_drop": 0.0023274406591573885,
+      "ADE_increase": -0.09470326559884512,
+      "trust_faulted": 0.6590671170325506
+    },
+    {
+      "cam_idx": 5,
+      "cam_name": "CAM_BACK_RIGHT",
+      "fault_type": "blackout",
+      "IoU": 0.03663432724380591,
+      "ADE": 28.579850832621258,
+      "IoU_drop": 0.0020602245344235534,
+      "ADE_increase": -0.17340123085748615,
+      "trust_faulted": 0.6590625303132194
+    },
+    {
+      "cam_idx": 0,
+      "cam_name": "CAM_FRONT",
+      "fault_type": "blackout",
+      "IoU": 0.03712148552348397,
+      "ADE": 28.53652000427246,
+      "IoU_drop": 0.0015730662547454935,
+      "ADE_increase": -0.2167320592062829,
+      "trust_faulted": 0.6590595671108791
+    },
+    {
+      "cam_idx": 2,
+      "cam_name": "CAM_FRONT_RIGHT",
+      "fault_type": "blackout",
+      "IoU": 0.03853736803570286,
+      "ADE": 28.532016651971,
+      "IoU_drop": 0.00015718374252660094,
+      "ADE_increase": -0.22123541150774528,
+      "trust_faulted": 0.6590623713674999
+    },
+    {
+      "cam_idx": 3,
+      "cam_name": "CAM_BACK",
+      "fault_type": "blur",
+      "IoU": 0.038598819626069196,
+      "ADE": 28.776639586403256,
+      "IoU_drop": 9.57321521602647e-05,
+      "ADE_increase": 0.023387522924512183,
+      "trust_faulted": 0.6272874559674945
+    },
+    {
+      "cam_idx": 1,
+      "cam_name": "CAM_FRONT_LEFT",
+      "fault_type": "blur",
+      "IoU": 0.03912962261734051,
+      "ADE": 28.65230287824358,
+      "IoU_drop": -0.0004350708391110472,
+      "ADE_increase": -0.10094918523516228,
+      "trust_faulted": 0.6350200942584446
+    },
+    {
+      "cam_idx": 5,
+      "cam_name": "CAM_BACK_RIGHT",
+      "fault_type": "blur",
+      "IoU": 0.03929021371677793,
+      "ADE": 28.631170670191448,
+      "IoU_drop": -0.0005956619385484724,
+      "ADE_increase": -0.12208139328729573,
+      "trust_faulted": 0.6336295264107841
+    },
+    {
+      "cam_idx": 4,
+      "cam_name": "CAM_BACK_LEFT",
+      "fault_type": "blur",
+      "IoU": 0.039348613389520365,
+      "ADE": 28.70421206383478,
+      "IoU_drop": -0.0006540616112909042,
+      "ADE_increase": -0.04903999964396277,
+      "trust_faulted": 0.6344976254871914
+    },
+    {
+      "cam_idx": 0,
+      "cam_name": "CAM_FRONT",
+      "fault_type": "blur",
+      "IoU": 0.039901202385587954,
+      "ADE": 28.617438373111543,
+      "IoU_drop": -0.0012066506073584934,
+      "ADE_increase": -0.13581369036720048,
+      "trust_faulted": 0.620021519206819
+    },
+    {
+      "cam_idx": 2,
+      "cam_name": "CAM_FRONT_RIGHT",
+      "fault_type": "blur",
+      "IoU": 0.04050034142708932,
+      "ADE": 28.712962502524967,
+      "IoU_drop": -0.0018057896488598568,
+      "ADE_increase": -0.040289560953777226,
+      "trust_faulted": 0.6336782688186282
+    }
+  ]
+}
