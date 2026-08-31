@@ -70,8 +70,10 @@ jobs:
       # pytest on download.pytorch.org, where it does not exist.
       # `--extra-index-url` would also work but lets pip pick either source for
       # a given package, which is how you get a CUDA torch on a CPU runner.
-      - run: pip install numpy pytest
       - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      # The test dependency set lives in the repo rather than in this file, so
+      # it cannot drift away from what the tests actually import.
+      - run: pip install -r requirements-test.txt
       - name: Collection must succeed
         # A collection error is NOT a test failure: it means the suite did not
         # run at all. tests/test_model.py imported a class that had been

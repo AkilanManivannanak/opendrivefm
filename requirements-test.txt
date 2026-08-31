@@ -1,0 +1,18 @@
+# Dependencies for `pytest tests/`, and nothing else.
+#
+# Deliberately NOT `pip install -e .`: pyproject's runtime dependencies include
+# nuscenes-devkit, pytorch-lightning, matplotlib and scipy, none of which any
+# test imports. nuscenes-devkit in particular is the package that could not be
+# installed on HuggingFace because of a Shapely conflict, and a CI gate that
+# depends on a fragile transitive install is a gate that fails for reasons
+# unrelated to the code it is meant to guard.
+#
+# The tests add src/ to sys.path themselves, so the package does not need to be
+# installed at all.
+#
+# torch is installed separately in CI from the CPU index. Do not add it here:
+# plain `pip install torch` pulls the CUDA build, which is ~2.5GB and pointless
+# on a CPU runner.
+numpy
+pytest
+einops>=0.7
