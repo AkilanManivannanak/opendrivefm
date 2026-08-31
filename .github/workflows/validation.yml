@@ -65,7 +65,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy pytest torch --index-url https://download.pytorch.org/whl/cpu
+      # Two commands on purpose. `--index-url` REPLACES PyPI rather than adding
+      # to it, so putting pytest and torch in one command sends pip to look for
+      # pytest on download.pytorch.org, where it does not exist.
+      # `--extra-index-url` would also work but lets pip pick either source for
+      # a given package, which is how you get a CUDA torch on a CPU runner.
+      - run: pip install numpy pytest
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Collection must succeed
         # A collection error is NOT a test failure: it means the suite did not
         # run at all. tests/test_model.py imported a class that had been
