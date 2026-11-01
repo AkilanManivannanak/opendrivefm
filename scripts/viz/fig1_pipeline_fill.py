@@ -7,6 +7,11 @@ is an empty grey rectangle. This script detects those rectangles, renders the
 real content for each from data/pack and outputs/artifacts, and composites.
 
 Nothing in the output is drawn by hand or invented.
+
+This writes fig1_pipeline, which is the paper's Figure 1. It used to write
+fig0_hero, the same name as the superseded teaser in fig0_hero.py, so
+whichever script ran last decided what the paper showed. The two now have
+separate names and fig0_hero.py is no longer part of the build.
 """
 import glob, io, json, os
 import numpy as np
@@ -180,15 +185,32 @@ def main():
                      [obj["observability"], obj["MSP (max conf in box)"]],
                      "observability"), (x0, y0))
 
+    # The shell artwork sets the strapline as "--- learning-free, one
+    # parameter ---". The paper sets no em dash anywhere else, and a dash
+    # that appears only inside a raster figure is the kind of inconsistency
+    # a copy editor catches and an author cannot explain. The shell is a
+    # flat PNG, so the two glyphs are painted out rather than re-typeset;
+    # the phrase reads the same without them. The assertion keeps this from
+    # silently erasing the wrong pixels if the shell is ever redrawn.
+    px = shell.load()
+    CREAM = (254, 246, 229)
+    for xa, xb in ((1790, 1842), (2497, 2549)):
+        dark = sum(1 for x in range(xa, xb) for y in range(1271, 1317)
+                   if sum(px[x, y][:3]) < 420)
+        assert 40 < dark < 900, (xa, dark)
+        for x in range(xa, xb):
+            for y in range(1271, 1317):
+                px[x, y] = CREAM
+
     os.makedirs(OUT, exist_ok=True)
-    shell.save(os.path.join(OUT, "fig0_hero.png"), dpi=(600, 600))
-    shell.save(os.path.join(OUT, "fig0_hero.pdf"), "PDF",
+    shell.save(os.path.join(OUT, "fig1_pipeline.png"), dpi=(600, 600))
+    shell.save(os.path.join(OUT, "fig1_pipeline.pdf"), "PDF",
                resolution=shell.width / 7.0)
     print("token", tok)
     print("voxel ", {k: round(vox[k], 4) for k in ("MSP", "observability", "mask_camera")})
     print("object", {k: round(v, 4) for k, v in obj.items()
                      if k in ("observability", "MSP (max conf in box)")})
-    print("wrote outputs/figures/fig0_hero.{png,pdf}")
+    print("wrote outputs/figures/fig1_pipeline.{png,pdf}")
 
 
 if __name__ == "__main__":

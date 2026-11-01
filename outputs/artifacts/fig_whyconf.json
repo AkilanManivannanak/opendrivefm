@@ -1,0 +1,15 @@
+{
+  "n": 40863,
+  "missed": 7905,
+  "wrong": 1370,
+  "correct": 31588,
+  "auroc_obs": 0.7623374529267868,
+  "auroc_msp": 0.7192591003542392,
+  "msp_median_missed": 0.9921568632125854,
+  "msp_median_correct": 1.0,
+  "msp_saturated_missed": 0.33915243516761545,
+  "obs_zero_missed": 0.4794433902593295,
+  "obs_zero_correct": 0.12431936178295555,
+  "source": "outputs/artifacts/missed_cache_conf.jsonl",
+  "scope": "test scenes of outputs/artifacts/val_dev_test.json"
+}

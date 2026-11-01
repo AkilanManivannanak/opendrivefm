@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Figure 1 (hero): the phenomenon, then the number, in one row.
+"""SUPERSEDED. The paper's Figure 1 is scripts/viz/fig1_pipeline_fill.py.
+
+This is the earlier hero and is kept only because its panels are reused in
+the README. It is not part of the paper build.
+
+Figure 1 (hero): the phenomenon, then the number, in one row.
 
 The reviewer's note was that the teaser led with statistics before the
 reader knew what failure was being counted. This puts the failure first --

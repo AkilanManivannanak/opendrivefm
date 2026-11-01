@@ -116,13 +116,13 @@ evaluation-time diagnostic.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig0_hero.pdf}
+\includegraphics[width=\textwidth]{fig1_pipeline.pdf}
 \caption{\textbf{\textsc{SightOcc}: geometric observability from the camera
 rig alone.} The six rig images and the calibration define, for every voxel,
-a projected coverage $c_i(v)$ --- how much image area the voxel subtends in
-camera $i$ --- and a first-hit visibility $s_i(v;\mathcal{G})$ --- whether
-the ray from that camera reaches it through the scene-geometry field
-$\mathcal{G}$. Their product, maximised over cameras, is
+a projected coverage $c_i(v)$, the image area the voxel subtends in
+camera $i$, and a first-hit visibility $s_i(v;\mathcal{G})$, which asks
+whether the ray from that camera reaches it through the scene-geometry
+field $\mathcal{G}$. Their product, maximised over cameras, is
 $O(v;\mathcal{G})$. No training and one parameter. Nothing in the pipeline
 reads the occupancy model, which is why the measure can rank failures the
 model's own confidence cannot: at object granularity observability reaches
@@ -136,14 +136,21 @@ observability map are one sealed-test frame, token
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{fig_whyconf.pdf}
-\caption{\textbf{Confidence can only rate a prediction that exists.} A
-wrong prediction leaves a low-confidence trace, so softmax flags it. A
-\emph{missing} prediction leaves a maximally confident vote for
-\texttt{free}, which is indistinguishable from correctly observed empty
-road, so softmax cannot flag it at all. Geometric observability never
-consults the model, so the two cases are identical to it and the second one
-is still visible. Probabilities are illustrative; the measured version of
-this argument is \cref{tab:perclass} and \cref{fig:quadrant}.}
+\caption{\textbf{Confidence can only rate a prediction that exists.}
+(a)~The mechanism. A wrong prediction occupies the voxel with the wrong
+label and leaves a confidence trace there. A \emph{missing} prediction
+occupies it with \texttt{free}, which is the same thing the model writes
+over correctly observed empty road, so there is no trace to read.
+(b, c)~The same claim measured, on all \nObj\ objects of the sealed test
+split, split by what the prediction placed inside the ground-truth box.
+Under maximum softmax the missed objects sit almost on top of the correctly
+detected ones (medians $0.992$ and $1.000$; $33.9\%$ of missed objects
+carry a value of $1.000$), which is why confidence reaches only
+\objMSP. Observability separates the same two populations
+($47.9\%$ of missed objects against $12.4\%$ of detected ones have no
+observability at all) and reaches \objObs. Every quantity on this figure
+is written by \texttt{scripts/viz/fig\_whyconf.py} to
+\texttt{fig\_whyconf.json}.}
 \label{fig:whyconf}
 \end{figure*}
 
@@ -161,8 +168,8 @@ This matters because of what consumes the occupancy field. End-to-end
 planners read occupancy and its descendants as a statement about the
 world~\cite{hu2023uniad, chen2024vadv2} and are benchmarked on how well
 they act on it~\cite{dauner2024navsim}, and the functional-safety framing
-for exactly this hazard class --- a system behaving as designed on input it
-was never equipped to interpret --- has its own
+for exactly this hazard class (a system behaving as designed on input it
+was never equipped to interpret) has its own
 standard~\cite{iso21448}. A planner reads the field as a statement about
 the world, not as a statement about the camera rig:
 a cell marked free is a cell the vehicle may drive through. The
@@ -283,7 +290,7 @@ frames the mask takes two values and observability occupies the interval,
 log scale. (d)~Restricting to voxels the mask already calls observed, the
 per-voxel error rate still varies with $O$ by a factor of
 \nMvoRatio: the mask is constant there and ranks nothing. The relation is
-not monotone --- \nMvoRev\ deciles rise, circled --- and is consistent with
+not monotone (\nMvoRev\ deciles rise, circled) and is consistent with
 the H1 contrast in \cref{tab:ledger}, which scores the \emph{calibration
 gap} against the same deciles rather than the error rate and counts its own
 reversals. The effect is concentrated in the lowest decile. Error bars are paired-frame bootstrap, 95\%.}
@@ -619,6 +626,12 @@ observability's \voxObs. At the frame level the ordering holds but
 narrows, \frmConf\ against \frmObs. At the object level it reverses:
 observability reaches \objObs\ against confidence's \objMSP, a gain of
 \objDelta\ \objDeltaCI\ over \nObj\ objects in \nFrames\ frames.
+Every paired contrast in this paper, this one included, is the mean of the
+paired scene-bootstrap difference distribution with its percentile interval,
+not the difference of the two point estimates printed beside it. Here those
+estimates differ by $+0.0431$ and the bootstrap mean is $+0.0432$; we quote
+the bootstrap mean throughout because it is the quantity the interval is
+built around.
 
 A LiDAR point-count oracle reaches \objOracle. It counts returns inside the
 ground-truth box in the current sweep and sees a modality the model never
@@ -673,7 +686,7 @@ The result above uses $\text{occ}_{\text{gt}}$ and is a statement about an
 evaluation-time measure. We rebuild observability with
 $\text{occ}_{\text{pred}}$, changing nothing else: same marcher, same
 $\pi_{\text{full}}$, same sealed split. The acceptance criterion was
-registered before the run -- the paired interval on
+registered before the run: the paired interval on
 $\mathrm{AUROC}(\text{obs}_{\text{pred}}) - \mathrm{AUROC}(\text{MSP})$ at
 object level must exclude zero.
 
@@ -739,9 +752,9 @@ observability at \emph{detected} objects, and the ranking degrades because
 the top of the scale falls rather than because the bottom rises.
 
 The cause is density. Predicted occupancy is far coarser than the
-ground-truth volume --- over 60 sampled frames the occupied fraction is
+ground-truth volume (over 60 sampled frames the occupied fraction is
 $0.579$ against $0.052$, a factor of $11$, and $37\times$ on the frame in
-\cref{fig:deploy} --- so a great many more rays are stopped. Mean
+\cref{fig:deploy}), so a great many more rays are stopped. Mean
 observability on that frame falls $41\%$ and the zero-observability
 fraction rises from $48.9\%$ to $77.7\%$. The measure saturates toward zero
 and loses the range it needs to discriminate. This is over-occlusion, not
@@ -763,8 +776,8 @@ nothing about them.
 \includegraphics[width=\textwidth]{fig6_quadrant.pdf}
 \caption{\textbf{Confidence and observability are different axes,
 populated with real objects.} (a)~Test objects split at the population
-medians, $O$ $0.36$ and MSP $1.00$ --- more than half of all objects carry
-the maximum softmax value, which is the problem the paper starts from;
+medians, $O$ $0.36$ and MSP $1.00$ (more than half of all objects carry
+the maximum softmax value, which is the problem the paper starts from);
 shading tracks the miss rate. The taxonomy one would draw is not what the
 data gives: the worst cell is low confidence with low observability, not
 high confidence with low observability. What the data does support is the
@@ -868,7 +881,7 @@ object level on 2080 objects:
 $\pi_{\text{full}}$ & object AUROC $\uparrow$ & $\Delta$ \\
 \midrule
 $500$   & 0.7485 & $-0.0045$ \\
-$965$ \;(registered) & 0.7529 & --- \\
+$965$ \;(registered) & 0.7529 & (ref.) \\
 $2000$  & 0.7552 & $+0.0022$ \\
 \midrule
 MSP, same objects & 0.7366 & \\
@@ -896,7 +909,7 @@ $\max_i c_i s_i$ \;(ours)        & \textbf{0.6755} & $+0.0575$ \\
 sum over cameras                 & 0.6748 & $+0.0568$ \\
 no temporal term                 & 0.6755 & $+0.0575$ \\
 \textbf{no visibility term} $s_i$ & 0.5908 & $\mathbf{-0.0272}$ \\
-\texttt{mask\_camera}            & 0.6180 & --- \\
+\texttt{mask\_camera}            & 0.6180 & (ref.) \\
 \bottomrule
 \end{tabular}
 \end{center}

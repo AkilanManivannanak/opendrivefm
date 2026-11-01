@@ -160,8 +160,12 @@ def main():
 
     os.makedirs(OUT, exist_ok=True)
     for ext in ("pdf", "png"):
+        # The title, the legend and the footer are all placed OUTSIDE the
+        # axes (x=-0.30, y=-0.41), so a fixed-canvas save cropped them: in
+        # the typeset paper the panel titles and the y-axis labels ran off
+        # the left edge of the column. The canvas has to follow the artists.
         fig.savefig(os.path.join(OUT, f"fig1_granularity.{ext}"),
-                    dpi=600,
+                    dpi=600, bbox_inches="tight", pad_inches=0.015,
                     facecolor="white", edgecolor="none")
     plt.close(fig)
 

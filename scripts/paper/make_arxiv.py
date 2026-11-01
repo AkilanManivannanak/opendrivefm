@@ -34,7 +34,8 @@ AVAILABILITY = r"""
 \paragraph{Code and data availability.} The measure, the evaluation harness,
 the sealed split and its digest, and the amendment log that fixes every
 hypothesis and acceptance threshold before its run are released at
-\url{https://github.com/AKilalours/opendrivefm} and mirrored at
+\url{https://github.com/AKilalours/opendrivefm}, with an identical copy on
+the second author's profile at
 \url{https://github.com/AkilanManivannanak/opendrivefm}. Every number in this
 paper is written by a named script to a JSON artifact in that repository, and
 each table and figure names the artifact it reads.
