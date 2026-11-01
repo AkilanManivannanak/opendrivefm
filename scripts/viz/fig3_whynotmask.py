@@ -15,6 +15,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from egomarker import ego_car
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 INK, C_GEOM, C_MASK = "#1a1a1a", "#2d6a9f", "#c05a3e"
 RNG_M = 40.0
@@ -63,7 +67,7 @@ def main():
     cb.outline.set_linewidth(0.5)
 
     for a in (A, B):
-        a.plot(0, 0, marker="^", ms=4.5, color="white", mec=INK, mew=0.6, zorder=6)
+        ego_car(a, 0, 0, length=4.6, edge=INK, lw=0.4, zorder=6)
         a.set_xticks([-40, 0, 40]); a.set_yticks([-40, 0, 40])
         a.tick_params(labelsize=7, length=2)
         a.set_xlabel("y (m)", fontsize=7, labelpad=1)

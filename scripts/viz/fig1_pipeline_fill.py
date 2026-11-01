@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from scipy import ndimage
 
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from egomarker import ego_car
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SHELL = os.path.join(ROOT, "assets/fig1_shell.png")
 OUT = os.path.join(ROOT, "outputs/figures")
@@ -157,8 +161,8 @@ def main():
     ax.imshow(obs[:, :, ZSL].T, origin="lower", cmap="viridis", vmin=0, vmax=1,
               interpolation="nearest", aspect="auto")
     n = obs.shape[0]
-    ax.plot(n / 2, n / 2, marker="^", ms=3.4 * SS, color="white",
-            mec=INK, mew=0.5 * SS, zorder=5)
+    # grid cells here, not metres: a 4.6 m car is 11.5 cells at 0.4 m
+    ego_car(ax, n / 2, n / 2, length=11.5, edge=INK, lw=0.4 * SS, zorder=5)
     ax.set_xlim(0, n); ax.set_ylim(0, n)
     shell.paste(fig_to_img(fig, w, h), (x0, y0))
 

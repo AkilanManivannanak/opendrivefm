@@ -19,6 +19,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from egomarker import ego_car
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RNG, FREE = 40.0, 17
 C_MISS, C_DET, INK = "#b3261e", "#1268a8", "#1a1a1a"
@@ -56,7 +60,7 @@ def main():
     def bev(a, img, cmap, vmin, vmax, title):
         h = a.imshow(img, origin="lower", extent=ext, cmap=cmap,
                      vmin=vmin, vmax=vmax, interpolation="nearest")
-        a.plot(0, 0, marker="^", ms=4, color="white", mec=INK, mew=0.6, zorder=6)
+        ego_car(a, 0, 0, length=4.6, edge=INK, lw=0.4, zorder=6)
         a.set_xticks([-40, 0, 40]); a.set_yticks([-40, 0, 40])
         a.tick_params(labelsize=7, length=2, pad=1)
         a.set_title(title, fontsize=8.4, loc="left", pad=3)

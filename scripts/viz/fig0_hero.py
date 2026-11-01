@@ -20,6 +20,10 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.colors import ListedColormap
 
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from egomarker import ego_car
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TOKEN = "dc03fe4e0a374592af7701c66d5276c4"
 RES, RNG, FREE = 0.4, 40.0, 17
@@ -129,7 +133,8 @@ def main():
         for s_ in a.spines.values():
             s_.set_color(GRID); s_.set_linewidth(0.6)
         a.add_patch(Circle((cy, cx), 2.7, fill=False, lw=1.2, ec=C_HOT, zorder=8))
-        a.plot(0, 0, marker="^", ms=4, color=INK, zorder=6)
+        ego_car(a, 0, 0, length=4.6, body=INK, glass="#f2f2f4",
+                edge="#f2f2f4", lw=0.4, zorder=6)
 
     bev(ax[1], tri(pcls), ListedColormap(
         ["#ffffff", "#e3e3df", "#b9b9b2", "#d1495b"]), None, None,
