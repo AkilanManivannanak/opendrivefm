@@ -1,0 +1,415 @@
+\begin{thebibliography}{63}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Angelopoulos and Bates(2021)]{angelopoulos2021conformal}
+Anastasios~N. Angelopoulos and Stephen Bates.
+\newblock A gentle introduction to conformal prediction and distribution-free
+  uncertainty quantification.
+\newblock \emph{arXiv preprint arXiv:2107.07511}, 2021.
+
+\bibitem[Behley et~al.(2019)Behley, Garbade, Milioto, Quenzel, Behnke,
+  Stachniss, and Gall]{behley2019semantickitti}
+Jens Behley, Martin Garbade, Andres Milioto, Jan Quenzel, Sven Behnke, Cyrill
+  Stachniss, and Juergen Gall.
+\newblock Semantickitti: A dataset for semantic scene understanding of lidar
+  sequences.
+\newblock In \emph{ICCV}, 2019.
+
+\bibitem[Blum et~al.(2021)Blum, Sarlin, Nieto, Siegwart, and
+  Cadena]{blum2019fishyscapes}
+Hermann Blum, Paul-Edouard Sarlin, Juan Nieto, Roland Siegwart, and Cesar
+  Cadena.
+\newblock The fishyscapes benchmark: Measuring blind spots in semantic
+  segmentation.
+\newblock \emph{IJCV}, 2021.
+
+\bibitem[Bochkovskii et~al.(2024)]{bochkovskii2024depthpro}
+Aleksei Bochkovskii et~al.
+\newblock Depth pro: Sharp monocular metric depth in less than a second.
+\newblock \emph{arXiv preprint arXiv:2410.02073}, 2024.
+
+\bibitem[B{\"o}rger et~al.(2022)]{borger2022sensorvisibility}
+Joachim B{\"o}rger et~al.
+\newblock Sensor visibility estimation: Metrics and methods for systematic
+  performance evaluation and improvement.
+\newblock \emph{arXiv preprint arXiv:2211.06308}, 2022.
+
+\bibitem[Caesar et~al.(2020)Caesar, Bankiti, Lang, Vora, Liong, Xu, Krishnan,
+  Pan, Baldan, and Beijbom]{caesar2020nuscenes}
+Holger Caesar, Varun Bankiti, Alex~H Lang, Sourabh Vora, Venice~Erin Liong,
+  Qiang Xu, Anush Krishnan, Yu Pan, Giancarlo Baldan, and Oscar Beijbom.
+\newblock {nuScenes}: A multimodal dataset for autonomous driving.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2020.
+
+\bibitem[Cao and de~Charette(2022)]{cao2022monoscene}
+Anh-Quan Cao and Raoul de Charette.
+\newblock Monoscene: Monocular 3d semantic scene completion.
+\newblock In \emph{CVPR}, 2022.
+
+\bibitem[Chambon et~al.(2024)Chambon, Buhet, Wirbel, Laptev, and
+  Perez]{chambon2024pointbev}
+Lo{\"i}c Chambon, Thibault Buhet, Eloi Wirbel, Ivan Laptev, and Patrick Perez.
+\newblock Pointbev: A sparse approach for bev predictions.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2024.
+
+\bibitem[Chen et~al.(2024)Chen, Jiang, Gao, et~al.]{chen2024vadv2}
+Shaoyu Chen, Bo Jiang, Hao Gao, et~al.
+\newblock Vadv2: End-to-end vectorized autonomous driving via probabilistic
+  planning.
+\newblock \emph{arXiv preprint arXiv:2402.13243}, 2024.
+
+\bibitem[Corbi{\`e}re et~al.(2019)Corbi{\`e}re, Thome, Bar-Hen, Cord, and
+  P{\'e}rez]{corbiere2019confidnet}
+Charles Corbi{\`e}re, Nicolas Thome, Avner Bar-Hen, Matthieu Cord, and Patrick
+  P{\'e}rez.
+\newblock Addressing failure prediction by learning model confidence.
+\newblock In \emph{NeurIPS}, 2019.
+
+\bibitem[Dauner et~al.(2024)Dauner, Hallgarten, Li, et~al.]{dauner2024navsim}
+Daniel Dauner, Marcel Hallgarten, Tianyu Li, et~al.
+\newblock Navsim: Data-driven non-reactive autonomous vehicle simulation and
+  benchmarking.
+\newblock In \emph{NeurIPS Datasets and Benchmarks}, 2024.
+
+\bibitem[de~Jorge et~al.(2023)]{derooij2023segreliability}
+Pau de Jorge et~al.
+\newblock Reliability in semantic segmentation: Are we on the right track?
+\newblock \emph{CVPR}, 2023.
+
+\bibitem[Drei{\ss}ig et~al.(2023)]{dreissig2023lidarcalib}
+Mariella Drei{\ss}ig et~al.
+\newblock On the calibration of uncertainty estimation in lidar-based semantic
+  segmentation.
+\newblock \emph{arXiv preprint arXiv:2308.02248}, 2023.
+
+\bibitem[Efron and Tibshirani(1986)]{efron1986bootstrap}
+Bradley Efron and Robert Tibshirani.
+\newblock Bootstrap methods for standard errors, confidence intervals, and
+  other measures of statistical accuracy.
+\newblock \emph{Statistical Science}, 1\penalty0 (1):\penalty0 54--75, 1986.
+
+\bibitem[El-Yaniv and Wiener(2010)]{elyaniv2010selective}
+Ran El-Yaniv and Yair Wiener.
+\newblock On the foundations of noise-free selective classification.
+\newblock \emph{JMLR}, 11:\penalty0 1605--1641, 2010.
+
+\bibitem[Gal and Ghahramani(2016)]{gal2016dropout}
+Yarin Gal and Zoubin Ghahramani.
+\newblock Dropout as a bayesian approximation: Representing model uncertainty
+  in deep learning.
+\newblock In \emph{ICML}, 2016.
+
+\bibitem[Geifman and El-Yaniv(2017)]{geifman2017selective}
+Yonatan Geifman and Ran El-Yaniv.
+\newblock Selective classification for deep neural networks.
+\newblock In \emph{NeurIPS}, 2017.
+
+\bibitem[Geifman and El-Yaniv(2019)]{geifman2019selectivenet}
+Yonatan Geifman and Ran El-Yaniv.
+\newblock Selectivenet: A deep neural network with an integrated reject option.
+\newblock In \emph{ICML}, 2019.
+
+\bibitem[Granese et~al.(2021)Granese, Romanelli, Gorla, Palamidessi, and
+  Piantanida]{granese2021doctor}
+Federica Granese, Marco Romanelli, Daniele Gorla, Catuscia Palamidessi, and
+  Pablo Piantanida.
+\newblock Doctor: A simple method for detecting misclassification errors.
+\newblock \emph{NeurIPS}, 2021.
+
+\bibitem[Guo et~al.(2017)Guo, Pleiss, Sun, and Weinberger]{guo2017calibration}
+Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian~Q. Weinberger.
+\newblock On calibration of modern neural networks.
+\newblock In \emph{ICML}, 2017.
+
+\bibitem[Hanley and McNeil(1982)]{hanley1982roc}
+James~A. Hanley and Barbara~J. McNeil.
+\newblock The meaning and use of the area under a receiver operating
+  characteristic (roc) curve.
+\newblock \emph{Radiology}, 143\penalty0 (1):\penalty0 29--36, 1982.
+
+\bibitem[Harley et~al.(2023)Harley, Fang, Li, Ambrus, and
+  Fragkiadaki]{harley2023simplebev}
+Adam~W Harley, Zhaoyuan Fang, Jie Li, Rares Ambrus, and Katerina Fragkiadaki.
+\newblock Simple-bev: What really matters for multi-sensor bev perception?
+\newblock In \emph{2023 IEEE International Conference on Robotics and
+  Automation (ICRA)}, 2023.
+
+\bibitem[Hendrycks and Gimpel(2017)]{hendrycks2017msp}
+Dan Hendrycks and Kevin Gimpel.
+\newblock A baseline for detecting misclassified and out-of-distribution
+  examples in neural networks.
+\newblock In \emph{ICLR}, 2017.
+
+\bibitem[Hu et~al.(2024)]{hu2024metric3dv2}
+Mu Hu et~al.
+\newblock Metric3d v2: A versatile monocular geometric foundation model for
+  zero-shot metric depth and surface normal estimation.
+\newblock \emph{arXiv preprint arXiv:2404.15506}, 2024.
+
+\bibitem[Hu et~al.(2023)Hu, Yang, Chen, Li, Sima, Zhu, Chai, Du, Lin, Wang,
+  et~al.]{hu2023uniad}
+Yihan Hu, Jiazhi Yang, Li Chen, Keyu Li, Chonghao Sima, Xizhou Zhu, Siqi Chai,
+  Senyao Du, Tianwei Lin, Wenhai Wang, et~al.
+\newblock Planning-oriented autonomous driving.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2023.
+
+\bibitem[Huang et~al.(2021)Huang, Huang, Zhu, and Du]{huang2021bevdet}
+Junjie Huang, Guan Huang, Zheng Zhu, and Dalong Du.
+\newblock Bevdet: High-performance multi-camera 3d object detection in
+  bird-eye-view.
+\newblock \emph{arXiv preprint arXiv:2112.11790}, 2021.
+
+\bibitem[Huang et~al.(2023)Huang, Zheng, Zhang, Zhou, and
+  Lu]{huang2023tpvformer}
+Yuanhui Huang, Wenzhao Zheng, Yunpeng Zhang, Jie Zhou, and Jiwen Lu.
+\newblock Tri-perspective view for vision-based 3d semantic occupancy
+  prediction.
+\newblock In \emph{CVPR}, 2023.
+
+\bibitem[{International Organization for Standardization}(2022)]{iso21448}
+{International Organization for Standardization}.
+\newblock {ISO} 21448:2022 road vehicles --- safety of the intended
+  functionality.
+\newblock International Standard ISO 21448:2022, {International Organization
+  for Standardization}, Geneva, Switzerland, 2022.
+
+\bibitem[Jiang et~al.(2018)Jiang, Kim, Guan, and Gupta]{jiang2018trust}
+Heinrich Jiang, Been Kim, Melody~Y. Guan, and Maya Gupta.
+\newblock To trust or not to trust a classifier.
+\newblock In \emph{NeurIPS}, 2018.
+
+\bibitem[K{\"a}lble et~al.(2025)]{kalble2025evocc}
+Jonas K{\"a}lble et~al.
+\newblock Evocc: Accurate semantic occupancy for automated driving using
+  evidence theory.
+\newblock In \emph{CVPR}, 2025.
+
+\bibitem[Kendall and Gal(2017)]{kendall2017uncertainties}
+Alex Kendall and Yarin Gal.
+\newblock What uncertainties do we need in bayesian deep learning for computer
+  vision?
+\newblock In \emph{NeurIPS}, 2017.
+
+\bibitem[Kim et~al.(2025)Kim, Kang, Lee, Choi, and Choi]{kim2025protoocc}
+Jungho Kim, Changwon Kang, Dongyoung Lee, Sehwan Choi, and Jun~Won Choi.
+\newblock Protoocc: Accurate, efficient 3d occupancy prediction using dual
+  branch encoder-prototype query decoder.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, pages 4284--4292, 2025.
+
+\bibitem[Kumar et~al.(2025)Kumar, Brophy, Mohandas, Grua, Sistu, Donzella, and
+  Eising]{occludednuscenes2025}
+Sanjay Kumar, Tim Brophy, Reenu Mohandas, Eoin~Martino Grua, Ganesh Sistu,
+  Valentina Donzella, and Ciaran Eising.
+\newblock Occluded nuscenes: A multi-sensor dataset for evaluating perception
+  robustness in automated driving.
+\newblock \emph{arXiv preprint arXiv:2510.18552}, 2025.
+
+\bibitem[Lakshminarayanan et~al.(2017)Lakshminarayanan, Pritzel, and
+  Blundell]{lakshminarayanan2017ensembles}
+Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell.
+\newblock Simple and scalable predictive uncertainty estimation using deep
+  ensembles.
+\newblock In \emph{NeurIPS}, 2017.
+
+\bibitem[Lee et~al.(2018)Lee, Lee, Lee, and Shin]{lee2018mahalanobis}
+Kimin Lee, Kibok Lee, Honglak Lee, and Jinwoo Shin.
+\newblock A simple unified framework for detecting out-of-distribution samples
+  and adversarial attacks.
+\newblock In \emph{NeurIPS}, 2018.
+
+\bibitem[Li et~al.(2025)Li, Li, Zheng, Sun, Wang, and Chen]{occworldsemi2025}
+Xiang Li, Pengfei Li, Yupeng Zheng, Wei Sun, Yan Wang, and Yilun Chen.
+\newblock Semi-supervised vision-centric 3d occupancy world model for
+  autonomous driving.
+\newblock \emph{arXiv preprint arXiv:2502.07309}, 2025.
+
+\bibitem[Li et~al.(2024)]{li2024gafusion}
+Xiaotian Li et~al.
+\newblock Gafusion: Adaptive fusing lidar and camera with multiple guidance for
+  3d object detection.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2024.
+
+\bibitem[Li et~al.(2023{\natexlab{a}})Li, Ge, Yu, Yang, Wang, Shi, Sun, and
+  Li]{li2023bevdepth}
+Yinhao Li, Zheng Ge, Guanyi Yu, Jinrong Yang, Zengran Wang, Yukang Shi,
+  Jianjian Sun, and Zeming Li.
+\newblock Bevdepth: Acquisition of reliable depth for multi-view 3d object
+  detection.
+\newblock In \emph{AAAI}, 2023{\natexlab{a}}.
+
+\bibitem[Li et~al.(2023{\natexlab{b}})Li, Yu, Choy, Xiao, Alvarez, Fidler,
+  Feng, and Anandkumar]{li2023voxformer}
+Yiming Li, Zhiding Yu, Christopher Choy, Chaowei Xiao, Jose~M. Alvarez, Sanja
+  Fidler, Chen Feng, and Anima Anandkumar.
+\newblock Voxformer: Sparse voxel transformer for camera-based 3d semantic
+  scene completion.
+\newblock In \emph{CVPR}, 2023{\natexlab{b}}.
+
+\bibitem[Li et~al.(2022)Li, Wang, Li, Xie, Sima, Lu, Qiao, and
+  Dai]{li2022bevformer}
+Zhiqi Li, Wenhai Wang, Hongyang Li, Enze Xie, Chonghao Sima, Tong Lu, Yu Qiao,
+  and Jifeng Dai.
+\newblock Bevformer: Learning bird's-eye-view representation from multi-camera
+  images via spatiotemporal transformers.
+\newblock In \emph{ECCV}, 2022.
+
+\bibitem[Li et~al.(2023{\natexlab{c}})Li, Yu, Austin, Fang, Lan, Kautz, and
+  Alvarez]{li2023fbocc}
+Zhiqi Li, Zhiding Yu, David Austin, Mingsheng Fang, Shiyi Lan, Jan Kautz, and
+  Jose~M. Alvarez.
+\newblock Fb-occ: 3d occupancy prediction based on forward-backward view
+  transformation.
+\newblock \emph{arXiv preprint arXiv:2307.01492}, 2023{\natexlab{c}}.
+
+\bibitem[Liang et~al.(2018)Liang, Li, and Srikant]{liang2018odin}
+Shiyu Liang, Yixuan Li, and R. Srikant.
+\newblock Enhancing the reliability of out-of-distribution image detection in
+  neural networks.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Liu et~al.(2023)]{liu2023sparseocc}
+Haisong Liu et~al.
+\newblock Fully sparse 3d panoptic occupancy prediction.
+\newblock \emph{arXiv preprint arXiv:2312.17118}, 2023.
+
+\bibitem[Liu et~al.(2020)Liu, Wang, Owens, and Li]{liu2020energy}
+Weitang Liu, Xiaoyun Wang, John~D. Owens, and Yixuan Li.
+\newblock Energy-based out-of-distribution detection.
+\newblock In \emph{NeurIPS}, 2020.
+
+\bibitem[Naeini et~al.(2015)Naeini, Cooper, and Hauskrecht]{naeini2015ece}
+Mahdi~Pakdaman Naeini, Gregory~F. Cooper, and Milos Hauskrecht.
+\newblock Obtaining well calibrated probabilities using bayesian binning.
+\newblock In \emph{AAAI}, 2015.
+
+\bibitem[Nosek et~al.(2018)Nosek, Ebersole, DeHaven, and
+  Mellor]{nosek2018preregistration}
+Brian~A. Nosek, Charles~R. Ebersole, Alexander~C. DeHaven, and David~T. Mellor.
+\newblock The preregistration revolution.
+\newblock \emph{PNAS}, 115\penalty0 (11):\penalty0 2600--2606, 2018.
+
+\bibitem[Philion and Fidler(2020)]{philion2020lss}
+Jonah Philion and Sanja Fidler.
+\newblock Lift, splat, shoot: Encoding images from arbitrary camera rigs by
+  implicitly unprojecting to 3d.
+\newblock In \emph{Proceedings of the European Conference on Computer Vision
+  (ECCV)}, 2020.
+
+\bibitem[Rahimi et~al.(2026)Rahimi, Gerard, Zablocki, Cord, and
+  Alahi]{rahimi2026mad}
+Ahmad Rahimi, Valentin Gerard, {\'E}loi Zablocki, Matthieu Cord, and Alexandre
+  Alahi.
+\newblock Mad: Motion appearance decoupling for efficient driving world models.
+\newblock In \emph{CVPR}, 2026.
+
+\bibitem[Sun et~al.(2020)Sun, Kretzschmar, Dotiwalla, et~al.]{sun2020waymo}
+Pei Sun, Henrik Kretzschmar, Xerxes Dotiwalla, et~al.
+\newblock Scalability in perception for autonomous driving: Waymo open dataset.
+\newblock In \emph{CVPR}, 2020.
+
+\bibitem[Tan et~al.(2026)Tan, Chitta, Chen, Tian, You, Wang, Luo, Cao,
+  Kr{\"a}henb{\"u}hl, Pavone, and Ivanovic]{tan2026lcdrive}
+Shuhan Tan, Kashyap Chitta, Yuxiao Chen, Ran Tian, Yurong You, Yan Wang, Wenjie
+  Luo, Yulong Cao, Philipp Kr{\"a}henb{\"u}hl, Marco Pavone, and Boris
+  Ivanovic.
+\newblock Latent chain-of-thought world modeling for end-to-end autonomous
+  driving.
+\newblock In \emph{CVPR}, 2026.
+
+\bibitem[Tian et~al.(2023)Tian, Jiang, Yun, Mao, Yang, Wang, Wang, and
+  Zhao]{tian2023occ3d}
+Xiaoyu Tian, Tao Jiang, Longfei Yun, Yucheng Mao, Huitong Yang, Yue Wang, Yilun
+  Wang, and Hang Zhao.
+\newblock Occ3d: A large-scale 3d occupancy prediction benchmark for autonomous
+  driving.
+\newblock In \emph{NeurIPS Datasets and Benchmarks}, 2023.
+
+\bibitem[Wang et~al.(2024{\natexlab{a}})]{occ2024alpha}
+Sanbao Wang et~al.
+\newblock $\alpha$-occ: Uncertainty-aware camera-based 3d semantic occupancy
+  prediction.
+\newblock \emph{arXiv preprint arXiv:2406.11021}, 2024{\natexlab{a}}.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Wang, Xu, Cai, Yu, Wang, and
+  Zhao]{wang2024occworld}
+Wenzhao Wang, Zhiqi Wang, Mengmeng Xu, Dubing Cai, Fisher Yu, Jiwen Wang, and
+  Haibin Zhao.
+\newblock Occworld: Learning a 3d occupancy world model for autonomous driving.
+\newblock In \emph{Proceedings of the European Conference on Computer Vision
+  (ECCV)}, 2024{\natexlab{b}}.
+
+\bibitem[Wang et~al.(2023)]{wang2023openoccupancy}
+Xiaofeng Wang et~al.
+\newblock Openoccupancy: A large scale benchmark for surrounding semantic
+  occupancy perception.
+\newblock In \emph{ICCV}, 2023.
+
+\bibitem[Wang et~al.(2025)Wang, Chen, Yang, Wang, Zhang, Zhao, and
+  Zhao]{depthanyprior2025}
+Zehan Wang, Siyu Chen, Lihe Yang, Jialei Wang, Ziang Zhang, Hengshuang Zhao,
+  and Zhou Zhao.
+\newblock Depth anything with any prior.
+\newblock \emph{arXiv preprint arXiv:2505.10565}, 2025.
+
+\bibitem[Wei et~al.(2023)Wei, Zhao, Zheng, Zhu, Zhou, and
+  Lu]{wei2023surroundocc}
+Yi Wei, Linqing Zhao, Wenzhao Zheng, Zheng Zhu, Jie Zhou, and Jiwen Lu.
+\newblock Surroundocc: Multi-camera 3d occupancy prediction for autonomous
+  driving.
+\newblock In \emph{ICCV}, 2023.
+
+\bibitem[Xia et~al.(2026)Xia, Li, Zhou, Yao, Xiong, Sun, Wang, Ma, Chen, Ye,
+  Liu, and Wang]{xia2026drivelaw}
+Tianze Xia, Yongkang Li, Lijun Zhou, Jingfeng Yao, Kaixin Xiong, Haiyang Sun,
+  Bing Wang, Kun Ma, Guang Chen, Hangjun Ye, Wenyu Liu, and Xinggang Wang.
+\newblock Drivelaw: Unifying planning and video generation in a latent driving
+  world.
+\newblock In \emph{CVPR}, 2026.
+
+\bibitem[Xu et~al.(2024)]{occsurvey2024}
+Yanan Xu et~al.
+\newblock Vision-based 3d occupancy prediction in autonomous driving: A review
+  and outlook.
+\newblock \emph{arXiv preprint arXiv:2405.02595}, 2024.
+
+\bibitem[Zhang et~al.(2024)Zhang, Zhang, Cai, Liu, and Wang]{lightocc2024}
+Jinqing Zhang, Yanan Zhang, Wenrui Cai, Qingjie Liu, and Yunhong Wang.
+\newblock Lightocc: Lightweight spatial embedding for efficient vision-based 3d
+  occupancy prediction.
+\newblock \emph{arXiv preprint arXiv:2412.05976}, 2024.
+
+\bibitem[Zhang et~al.(2023)Zhang, Zhu, and Du]{zhang2023occformer}
+Yunpeng Zhang, Zheng Zhu, and Dalong Du.
+\newblock Occformer: Dual-path transformer for vision-based 3d semantic
+  occupancy prediction.
+\newblock In \emph{ICCV}, 2023.
+
+\bibitem[Zheng et~al.(2024)]{zheng2024monoocc}
+Yupeng Zheng et~al.
+\newblock Monoocc: Digging into monocular semantic occupancy prediction.
+\newblock \emph{arXiv preprint arXiv:2403.08766}, 2024.
+
+\bibitem[Zhu et~al.(2024)Zhu, Cheng, Zhang, and Liu]{zhu2024revisiting}
+Fei Zhu, Zhen Cheng, Xu-Yao Zhang, and Cheng-Lin Liu.
+\newblock Revisiting confidence estimation: Towards reliable failure
+  prediction.
+\newblock \emph{TPAMI}, 2024.
+
+\bibitem[Zhu et~al.(2026)Zhu, Xue, Zhang, Jiang, Zhou, Yan, Gao, Cai, Liu, Li,
+  and Shen]{zhu2026dlwm}
+Yiyao Zhu, Ying Xue, Haiming Zhang, Guangfeng Jiang, Wending Zhou, Xu Yan,
+  Jiantao Gao, Yingjie Cai, Bingbing Liu, Zhen Li, and Shaojie Shen.
+\newblock Dlwm: Dual latent world models enable holistic gaussian-centric
+  pre-training in autonomous driving.
+\newblock In \emph{CVPR}, 2026.
+
+\end{thebibliography}

@@ -218,3 +218,9 @@ docs/figs/_r3d.png
 # scripts/figs/export_viewer.py.
 !docs/viewer/data/
 !docs/viewer/data/**
+paper/arxiv-submission.tar.gz
+paper/arxiv/main.pdf
+paper/arxiv/*.aux
+paper/arxiv/*.log
+paper/arxiv/*.out
+paper/arxiv/*.brf

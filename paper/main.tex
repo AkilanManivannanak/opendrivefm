@@ -283,9 +283,10 @@ frames the mask takes two values and observability occupies the interval,
 log scale. (d)~Restricting to voxels the mask already calls observed, the
 per-voxel error rate still varies with $O$ by a factor of
 \nMvoRatio: the mask is constant there and ranks nothing. The relation is
-not monotone --- \nMvoRev\ deciles rise, circled --- which is the H1 result
-reported in \cref{tab:ledger}, and the effect is concentrated in the lowest
-decile. Error bars are paired-frame bootstrap, 95\%.}
+not monotone --- \nMvoRev\ deciles rise, circled --- and is consistent with
+the H1 contrast in \cref{tab:ledger}, which scores the \emph{calibration
+gap} against the same deciles rather than the error rate and counts its own
+reversals. The effect is concentrated in the lowest decile. Error bars are paired-frame bootstrap, 95\%.}
 \label{fig:maskcam}
 \end{figure*}
 
@@ -580,8 +581,9 @@ This is a modest effect in absolute terms and we do not inflate it. Its
 interest is that it is obtained by a quantity that costs no training, reads
 nothing from the network, and is available before the forward pass.
 
-\paragraph{The granularity inversion.}
+\subsection{The granularity inversion}
 \label{sec:inversion}
+
 \paragraph{What counts as a miss.} For a ground-truth box $B_j$ of class
 $y_j$ with predicted labels $\hat{y}$:
 \begin{align}
@@ -601,8 +603,8 @@ are excluded, and only boxes holding at least one ground-truth voxel of
 their own class are scored.
 
 \Cref{fig:qualitative} is one such object in full: the ground truth
-contains a pedestrian, the prediction contains nothing where it stands,
-and the observability field is zero over the same cells. The strict and
+contains a bus, the prediction contains no dynamic class anywhere inside
+its box, and the observability field is near zero over the same cells. The strict and
 dynamic criteria agree on that example; they disagree on boxes the model
 fills with static classes, which is why both are reported.
 
