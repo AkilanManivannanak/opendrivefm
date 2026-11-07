@@ -57,10 +57,13 @@ def strip_comments(text):
 
 
 def main():
-    if os.path.isdir(OUT):
-        shutil.rmtree(OUT)
-    os.makedirs(os.path.join(OUT, "figs"))
-    os.makedirs(os.path.join(OUT, "tables"))
+    # Overwrite in place rather than wiping the directory. Every file the
+    # package needs is written on every run, so a clean tree is not
+    # required, and the user's machine does not grant this process the
+    # right to delete files inside their folders.
+    os.makedirs(OUT, exist_ok=True)
+    os.makedirs(os.path.join(OUT, "figs"), exist_ok=True)
+    os.makedirs(os.path.join(OUT, "tables"), exist_ok=True)
 
     tex = open(os.path.join(SRC, "main.tex")).read()
 
@@ -131,8 +134,9 @@ def main():
     tar = os.path.join(ROOT, "paper", "arxiv-submission.tar.gz")
     keep = ["main.tex", "cvpr.sty", "ieeenat_fullname.bst", "main.bbl",
             "opendrivefm_refs.bib", "figs", "tables"]
-    if os.path.exists(tar):
-        os.remove(tar)
+    # tar -czf truncates and rewrites the archive, so the old one does not
+    # have to be deleted first. It must not be: this process may be running
+    # against a folder on the user's machine where deletion is not granted.
     subprocess.run(["tar", "-czf", tar, "-C", OUT] + keep, check=True)
     print(f"  upload tarball {os.path.relpath(tar, ROOT)} "
           f"({os.path.getsize(tar)/1e6:.1f} MB)")

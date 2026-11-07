@@ -73,23 +73,24 @@ Long Island University, Brooklyn, NY\\
 \itshape
 Camera-only 3D occupancy models are evaluated as though every voxel were
 equally observable, yet a model can assign maximal confidence to free
-space exactly where the camera rig supplies almost no geometric evidence:
-a missed object and correctly observed empty road are both simply
-\emph{free}. We introduce {\upshape\textsc{SightOcc}}, a learning-free continuous
+space exactly where the camera rig supplies almost no geometric evidence.
+Consequently, a missed object and correctly observed empty road are both
+simply \emph{free}. We introduce {\upshape\textsc{SightOcc}}, a learning-free continuous
 measure of \emph{geometric observability} $O(v;\mathcal{G})$ that combines
 projected voxel coverage with first-hit visibility across the rig. Unlike
 a binary camera-observation mask it carries evidence \emph{strength} and
 resolves occlusion explicitly, and on Occ3D-nuScenes it ranks per-voxel
 error above the dataset's own \texttt{mask\_camera} flag by \Hii\ AUROC on
 a sealed test split. Our main finding is an inversion across granularity.
-For whether an individual voxel is wrong, the model's own confidence
-dominates geometry (\voxMSP\ against \voxObs). For whether a whole
-\emph{object} is missed entirely, geometry wins (\objObs\ against
-\objMSP, \objDelta\ over \nObj\ objects) and comes within noise of a LiDAR
-point-count oracle. Confidence is a statement about a prediction that was
-made, and is structurally unable to flag one that was never made at all.
-Because the measure reads external scene geometry, we position it as an
-evaluation-time diagnostic.
+Model confidence is the stronger predictor of voxel-level error
+(\voxMSP\ against \voxObs). For detecting objects that are missed
+entirely, geometric observability is the more informative signal (\objObs\
+against \objMSP, \objDelta\ over \nObj\ objects), and it comes within
+noise of a LiDAR point-count oracle. Confidence is a statement about a
+prediction that was made, and is structurally unable to flag one that was
+never made at all. Because observability is resolved against an external
+geometry field, we use it as an evaluation-time diagnostic rather than an
+inference-time signal.
 \end{abstract}
 
 \section{Introduction}
@@ -134,8 +135,9 @@ is written by \texttt{scripts/viz/fig\_whyconf.py} to
 \label{fig:whyconf}
 \end{figure*}
 
-A camera-only occupancy model asked about a volume of space it cannot see
-does not abstain. It predicts free space, and it does so confidently.
+A camera-only occupancy model does not abstain when queried about a volume
+outside its field of view. It predicts free space, and it does so
+confidently.
 Nothing in the model's output distinguishes ``there is nothing here'' from
 ``I have no evidence either way'', because both arrive as a high-probability
 vote for the free class. On the held-out scenes used throughout this paper,
@@ -143,8 +145,8 @@ vote for the free class. On the held-out scenes used throughout this paper,
 evidence are not predicted by the model at all. \Cref{fig:hero} shows one of them.
 
 This matters because of what consumes the occupancy field. End-to-end
-planners read occupancy and its descendants as a statement about the
-world~\cite{hu2023uniad, chen2024vadv2} and are benchmarked on how well
+planners interpret occupancy predictions as statements about the actual
+state of the world~\cite{hu2023uniad, chen2024vadv2} and are benchmarked on how well
 they act on it~\cite{dauner2024navsim}, and the functional-safety framing
 for exactly this hazard class (a system behaving as designed on input it
 was never equipped to interpret) has its own
@@ -152,8 +154,8 @@ standard~\cite{iso21448}. A planner reads the field as a statement about
 the world, not as a statement about the camera rig:
 a cell marked free is a cell the vehicle may drive through. The
 representation has no channel in which to say \emph{I have no evidence
-here}, so absence of evidence is delivered to the planner as evidence of
-absence, and the planner has no way to tell the two apart. On the frames we
+here}; thus, absence of evidence is delivered to the planner as evidence
+of absence, and the planner has no way to tell the two apart. On the frames we
 measure, $76.6\%$ of ground-truth obstacle voxels lie in volumes with no
 camera evidence at all.
 
@@ -176,8 +178,8 @@ and has to come from something that knows about the sensors.
 prediction the model just produced is likely to be correct. Observability
 asks whether the sensor configuration could have supplied evidence about
 that location at all. The two coincide when the model predicts an object
-and diverge when it confidently predicts free space, because in that case
-there is no object hypothesis whose confidence could be evaluated. No
+and diverge when it confidently predicts free space, since there is no
+object hypothesis whose confidence can be evaluated. No
 recalibration of the output changes this: calibration rescales the
 confidences attached to predictions that exist. That is the gap external
 geometric evidence might fill, and the rest of this paper measures whether
@@ -198,19 +200,28 @@ outside the network from the camera rig and a scene-geometry field:
 
 \paragraph{Contributions.}
 \begin{itemize}\itemsep0pt
-\item \textbf{Geometric observability.} A continuous, learning-free,
-      sensor-side measure combining projection coverage with first-hit
-      visibility under an \emph{explicit} scene-geometry field
-      $\mathcal{G}$, for ranking camera-only occupancy failures.
-\item \textbf{The granularity inversion.} Across \nObj\ dynamic objects,
-      confidence dominates voxel-level error ranking while observability
-      becomes the stronger signal for objects the model never predicts at
-      all. The two remain non-redundant at matched confidence.
-\item \textbf{The geometry-source boundary.} The object-level advantage
-      depends on external scene geometry and collapses when the model's own
-      dense occupancy is substituted as the occluder, through
-      over-occlusion rather than any circularity in the idea, which
-      places the measure at evaluation time and says precisely why.
+\item \textbf{Geometric observability.} We introduce \textsc{SightOcc}, a
+      continuous, learning-free, sensor-side measure that combines
+      projection coverage with first-hit visibility under an \emph{explicit}
+      scene-geometry field $\mathcal{G}$, carries one fixed parameter, and
+      reads nothing from the occupancy model. The measure, the name and the
+      protocol around it are introduced in this paper.
+\item \textbf{The granularity inversion.} Model confidence is the
+      strongest signal for ranking voxel-level error. For objects the model
+      fails to predict at all, observability is the more informative signal.
+      Ensemble disagreement offers no advantage over confidence, while
+      combining geometry with confidence outperforms either alone. The
+      contrast is measured over \nObj\ dynamic objects, and the two signals
+      remain non-redundant at matched confidence.
+\item \textbf{An identified mechanism for the geometry source.} We show
+      that what the object-level advantage depends on is the \emph{density}
+      of the occluder field, not a circularity in the idea: substituting the
+      model's own dense occupancy over-occludes regions the rig genuinely
+      sees, and we isolate which side of the comparison moves.
+\item \textbf{A registered evaluation protocol.} The experiments cover
+      three camera-only models on Occ3D-nuScenes. We report every contrast
+      with its paired scene-bootstrap confidence interval and its
+      registration status, including the registrations that failed.
 \end{itemize}
 
 
@@ -375,10 +386,11 @@ $\pm40$\,m laterally, with eighteen classes of which one, index $17$,
 means \texttt{free}. Write the prediction $\hat{y}(v)$ and the
 ground truth $y(v)$.
 
-We study two failure events. A \emph{voxel error} is
-$\hat{y}(v)\neq y(v)$. A \emph{missed object} is the stronger event that a
-whole annotated instance goes unrepresented: for a ground-truth box
-$\mathcal{B}_j$ of a dynamic class,
+We study two failure events. A \emph{voxel error} is the event
+$\hat{y}(v)\neq y(v)$, that the predicted class of a voxel differs from its
+ground-truth class. A \emph{missed object}, written $M_j$ and defined in
+\cref{eq:miss}, is the stronger event that a whole annotated instance goes
+unrepresented: for a ground-truth box $\mathcal{B}_j$ of a dynamic class,
 \begin{equation}
 M_j \;=\; \mathbb{1}\!\left[\;\nexists\, v \in \mathcal{B}_j
    \;:\; \hat{y}(v) \in \mathcal{D} \;\right],
@@ -401,10 +413,14 @@ a function of $\hat{p}$.
 
 \subsection{The measure}
 \label{sec:defn}
-Let $c_i(v)\in[0,1]$ be how well camera $i$ resolves voxel $v$, and
-$s_i(v;\mathcal{G})\in\{0,1\}$ whether the ray from camera $i$ reaches $v$
-before anything else in the scene-geometry field $\mathcal{G}$.
-Observability is the best evidence any one camera supplies:
+Two quantities enter the measure. The \emph{projected coverage}
+$c_i(v)\in[0,1]$, defined in \cref{eq:coverage}, is how much image area camera
+$i$ devotes to voxel $v$, and so how well that camera resolves it. The
+\emph{first-hit visibility} $s_i(v;\mathcal{G})\in\{0,1\}$, defined in
+\cref{eq:firsthit}, is whether the ray from camera $i$ reaches $v$ before
+anything else in the scene-geometry field $\mathcal{G}$. Geometric
+observability $O(v;\mathcal{G})$ is then the best evidence any one camera
+supplies about $v$:
 \begin{equation}
 O(v;\mathcal{G}) \;=\; \max_{i \in \mathcal{C}} \; c_i(v)\cdot
    s_i(v;\mathcal{G}).
@@ -525,10 +541,16 @@ actually has (\cref{sec:deployable})? Every number is computed on a split sealed
 development, and every contrast was specified before its data existed.
 
 \subsection{Setup}
-\paragraph{Model and data.}
-FB-OCC r50 with temporal fusion on Occ3D-nuScenes, $200\times200\times16$
-voxels at 0.4\,m, 18 classes. We measure mIoU $38.90$ against a
-published $39.1$, so the checkpoint reproduces.
+\paragraph{Models and data.}
+Occ3D-nuScenes~\cite{tian2023occ3d, caesar2020nuscenes} supplies a
+$200\times200\times16$ grid at $0.4$\,m around the ego vehicle, 18 classes
+and six cameras. FB-OCC r50~\cite{li2023fbocc} with 16-frame temporal
+fusion is the primary model; we measure mIoU $38.90$ against a published
+$39.1$, so the checkpoint reproduces. FlashOcc~\cite{yu2023flashocc} R50 in
+its 1-frame (M1) and 2-frame (M2) configurations is a second architecture,
+used to test whether the voxel-level comparison replicates. All models use
+publicly available pretrained checkpoints, and the observability maps are
+computed once and shared across all three.
 
 \paragraph{The sealed split.}
 The 150 validation scenes are partitioned once into a development half and
@@ -552,11 +574,39 @@ of~\cite{nosek2018preregistration}.
 
 \paragraph{Observability outranks the camera mask.}
 \label{sec:h2}
-Scoring per-voxel error inside \texttt{mask\_camera}, where the mask is
-constant and therefore ranks nothing, observability reaches an AUROC of
-$0.6321$. The contrast H2 against the mask is
-\Hii\ \HiiCI\ on the test half, and $+0.0534$ on the full 150 scenes; the
-test figure is the one we quote, and the two are given together so the
+\Cref{tab:maskcmp} scores per-voxel error over the full volume, using
+observability and the dataset's binary mask each as a ranking score.
+\textsc{SightOcc} outranks the mask on all three models, by $+0.0484$ to
+$+0.0700$ AUROC, every interval excluding zero. The acceptance bar for the
+second architecture, an interval excluding zero with a point estimate above
+$+0.02$, was fixed before any FlashOcc code was run. The margin is not
+monotone in temporal depth across 1, 2 and 16 frames, so it is not a
+property of temporal fusion, and we do not claim the margins differ between
+models.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Model (frames) & \textsc{SightOcc} & mask & [95\% CI] & in mask \\
+\midrule
+FB-OCC (16)      & 0.6714 & 0.6230 & [$+$.039, $+$.058] & 0.6321 \\
+FlashOcc M2 (2)  & \textbf{0.7041} & 0.6340 & [$+$.060, $+$.079] & 0.6414 \\
+FlashOcc M1 (1)  & 0.6908 & 0.6299 & [$+$.052, $+$.070] & 0.6363 \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Per-voxel error ranking, test split, three camera-only
+models.} AUROC of observability and of the binary \texttt{mask\_camera}
+over the full volume, with the paired scene-bootstrap interval on their
+difference. The last column scores observability \emph{inside} the mask,
+where the mask is constant and ranks nothing. 3{,}008 frames, 75 scenes.}
+\label{tab:maskcmp}
+\end{table}
+
+Inside the mask, where the mask is constant and therefore ranks nothing,
+observability still reaches $0.6321$ to $0.6414$. The headline contrast H2
+is \Hii\ \HiiCI\ on the test half, and $+0.0534$ on the full 150 scenes;
+the test figure is the one we quote, and the two are given together so the
 difference cannot be mistaken for a selection effect.
 
 This is a modest effect in absolute terms and we do not inflate it. Its
@@ -627,9 +677,12 @@ has little left to rank, while the model's confidence still varies.
 
 \paragraph{Object-level baselines.}
 \label{sec:baselines}
-A single confidence baseline is not enough to support the claim, so we score
-every signal we can read from the same predictions on the same objects:
-\begin{center}\small
+A single confidence baseline is not enough to support the claim, so
+\cref{tab:baselines} scores every signal we can read from the same
+predictions on the same objects.
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{llc}
 \toprule
 & Signal & AUROC $\uparrow$ \\
@@ -646,7 +699,10 @@ every signal we can read from the same predictions on the same objects:
 & LiDAR points in box \textsc{(oracle)} & 0.7745 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Object-level failure signals, FB-OCC, test split.} Every signal is scored on the same \nObj\ objects for ranking the missed-object event of \cref{eq:missdyn}; higher is better. The LiDAR oracle sees a modality the camera-only model never receives and is an upper reference, not a competitor.}
+\label{tab:baselines}
+\end{table}
+
 The model-derived family is not close to exhausted by maximum softmax, but
 it is bounded by it: the best of the three reaches 0.7193 and the other two
 sit near chance, because inside a box the model never populated there is
@@ -665,9 +721,12 @@ registered before the run: the paired interval on
 $\mathrm{AUROC}(\text{obs}_{\text{pred}}) - \mathrm{AUROC}(\text{MSP})$ at
 object level must exclude zero.
 
-\textbf{It does not survive.} On a pre-declared subsample of 800 test
-frames (seed fixed before the run), 10{,}790 objects in all 75 test scenes:
-\begin{center}\small
+\textbf{It does not survive.} \Cref{tab:occluder} reports the comparison on
+a pre-declared subsample of 800 test frames (seed fixed before the run),
+10{,}790 objects in all 75 test scenes.
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{lc}
 \toprule
 Occluder for $s_i$ & AUROC $\uparrow$ \\
@@ -677,7 +736,10 @@ MSP \;(no geometry at all)                   & 0.7184 \\
 $\text{occ}_{\text{pred}}$ \;(deployable)    & 0.6708 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Which geometry resolves the occlusion.} Object-level AUROC on the 800-frame test subsample when the first-hit test of \cref{eq:firsthit} is resolved against the ground-truth volume, against nothing at all, and against the model's own predicted occupancy.}
+\label{tab:occluder}
+\end{table}
+
 Paired scene bootstrap: $\text{occ}_{\text{gt}}$ reproduces the headline on
 this subsample, $+0.0464$ $[+0.0193, +0.0733]$ over MSP, which confirms the
 subsample is not the cause of what follows. The deployable form is
@@ -709,8 +771,10 @@ below the $0.718$ of plain softmax.}
 is that a missed object, being predicted free, stops occluding, so the ray
 passes through and observability is falsely \emph{high} exactly where we
 need it low. That explanation is wrong, and the per-object means say so
-(\cref{fig:deploy}c):
-\begin{center}\small
+(\cref{fig:deploy}c and \cref{tab:whichmoves}).
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{lccc}
 \toprule
 mean observability & $\text{occ}_{\text{gt}}$ & $\text{occ}_{\text{pred}}$ & $\Delta$ \\
@@ -721,7 +785,10 @@ detected objects & 0.5402 & 0.4586 & $\mathbf{-0.0816}$ \\
 separation       & 0.3415 & 0.2569 & $-25\%$ \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Which side of the comparison moves.} Mean observability over the 10{,}790 objects of the test subsample, resolved against each occluder. The substitution leaves missed objects where they were and pulls detected objects down, so the separation that carries the ranking shrinks by a quarter.}
+\label{tab:whichmoves}
+\end{table}
+
 Observability at missed objects is unchanged. What collapses is
 observability at \emph{detected} objects, and the ranking degrades because
 the top of the scale falls rather than because the bottom rises.
@@ -805,8 +872,11 @@ margin and $d$ range from ego. No weight is tuned on the test half.
 \paragraph{Downstream: selective prediction.}
 A ranking score is only useful if abstaining on its worst-ranked fraction
 actually lowers risk. Measuring area under the risk-coverage curve
-(AURC, lower is better) on the sensor-only volume:
-\begin{center}\small
+(AURC, lower is better) on the sensor-only volume gives
+\cref{tab:selective}.
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{lc}
 \toprule
 Score & AURC $\downarrow$ \\
@@ -818,7 +888,10 @@ observability alone             & 0.3156 \\
 \texttt{mask\_camera} alone     & 0.3542 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Selective prediction on the sensor-only volume.} Area under the risk-coverage curve; lower is better. Observability is useful as an addition to confidence and poor as a replacement for it.}
+\label{tab:selective}
+\end{table}
+
 Adding observability to confidence reduces AURC by
 $0.0365$ $[0.0307, 0.0425]$, which holds. Against
 confidence plus \texttt{mask\_camera} it is $-0.0033$
@@ -848,9 +921,11 @@ the $\arg\max$ camera unchanged, and is a strictly monotone transform of the
 score. Every rank metric here is \emph{exactly} invariant on that set, and
 $\pi_{\text{full}}$ can act only through the saturated remainder, which is
 $11.9\%$ of in-frustum voxel--camera pairs at the registered value.
-Rebuilding observability end to end over a fourfold range and scoring at
-object level on 2080 objects:
-\begin{center}\small
+\Cref{tab:pifull} rebuilds observability end to end over a fourfold range
+and scores it at object level on 2080 objects.
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{lcc}
 \toprule
 $\pi_{\text{full}}$ & object AUROC $\uparrow$ & $\Delta$ \\
@@ -862,7 +937,10 @@ $2000$  & 0.7552 & $+0.0022$ \\
 MSP, same objects & 0.7366 & \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Sensitivity to the one parameter.} Object-level AUROC with $\pi_{\text{full}}$ varied over a factor of four, rebuilt end to end. $\Delta$ is measured against the registered value, which is the reference row. Every setting beats maximum softmax on the same objects.}
+\label{tab:pifull}
+\end{table}
+
 The spread across $4\times$ is $0.0067$ AUROC, smaller than the effect being
 reported, and every value beats MSP. The registered $965$ was derived to
 preserve a $16.3$\,m saturation radius before any of these numbers existed,
@@ -873,9 +951,11 @@ transform of the confidence score, so it leaves every ranking metric in this
 paper exactly unchanged. It therefore appears in no ranking table in this paper.
 
 \paragraph{Which term carries the result.} \Cref{eq:obs} has two factors and
-a pooling choice, and only one of the three matters. Scoring per-voxel error
-on 675 frames across 145 scenes:
-\begin{center}\small
+a pooling choice, and only one of the three matters. \Cref{tab:variants}
+scores per-voxel error on 675 frames across 145 scenes.
+
+\begin{table}[t]
+\centering\small
 \begin{tabular}{lcc}
 \toprule
 Variant & AUROC $\uparrow$ & vs \texttt{mask\_camera} \\
@@ -887,7 +967,12 @@ no temporal term                 & 0.6755 & $+0.0575$ \\
 \texttt{mask\_camera}            & 0.6180 & (ref.) \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\textbf{Which term carries the result.} Per-voxel AUROC for each
+variant of \cref{eq:obs}, compared against the dataset's binary mask, which
+is the reference row. Removing the visibility factor $s_i$ is the only
+change that matters, and it drops the measure below the mask.}
+\label{tab:variants}
+\end{table}
 Pooling by maximum rather than by sum is worth $+0.0007$, which is nothing;
 we keep the maximum because it is the one with a reading ("seen well by at
 least one camera"), not because it measures better. Dropping the visibility
@@ -954,17 +1039,41 @@ the ground-truth volume and shadows regions the rig genuinely sees. That is
 a property of the particular occupancy field rather than a circularity in
 the idea.
 
-Three limitations bound the claim. (1) The measure reads an external
-occupancy field, so in the form evaluated here it is a diagnostic for
-camera-only occupancy rather than a runtime monitor; supplying that field
-from a source independent of the occupancy model, such as a monocular depth
-foundation model~\cite{bochkovskii2024depthpro, hu2024metric3dv2}, is the
-obvious next step. (2) Every number is one checkpoint of FB-OCC r50 on
-Occ3D-nuScenes, so Occ3D's annotation geometry defines both the ground
-truth and the occluder set. (3) We measure ranking quality and selective
-risk, not collision rate, and we do not compare against sampling-based
-uncertainty baselines, which need forward passes our export does not
-retain.
+\paragraph{Limitations.}
+(1)~Observability is resolved against an external occupancy field.
+Substituting the model's own predicted occupancy makes it score below
+maximum softmax at object level, so in the form evaluated here it is an
+evaluation-time diagnostic rather than a runtime monitor. Supplying that
+field from a source independent of the occupancy model, such as a monocular
+depth foundation model~\cite{bochkovskii2024depthpro, hu2024metric3dv2}, is
+the obvious next step and we have not tested one.
+(2)~The object-level results are one checkpoint of FB-OCC r50 on
+Occ3D-nuScenes; only the voxel-level comparison is replicated on a second
+architecture, so Occ3D's annotation geometry defines both the ground truth
+and the occluder set.
+(3)~Test scenes were used during exploration before the partition was
+enforced in code, so validation on a second dataset is still needed.
+(4)~Visibility is binary per voxel--camera pair and object scores use a
+maximum; fractional visibility and other aggregations are untested.
+(5)~We measure ranking quality, selective risk and one gating ablation, not
+collision rate, and we do not compare against sampling-based uncertainty
+baselines, which need forward passes our export does not retain.
+
+\paragraph{Code and data.}
+The evaluation harness, the sealed split and its digest, and the dated
+amendment log that fixes every hypothesis and acceptance threshold before
+its run are available upon request.
+
+\paragraph{Use of large language models.}
+A large language model was used in two ways. During the research it was
+used to discuss candidate experiments and to help interpret results. During
+revision of this manuscript it was used to edit and condense the text, to
+check reported numbers and method descriptions against the evaluation code
+and the result files, and to verify bibliographic entries against their
+published sources. The authors conceptualised the study, developed the
+methodology, designed the experiments, defined the acceptance criteria, ran
+the experiments, reviewed all edits and checks, and take full
+responsibility for the content.
 
 {\small
 \IfFileExists{ieeenat_fullname.bst}{%

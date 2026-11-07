@@ -24,7 +24,8 @@
 @inproceedings{li2024gafusion,
   title     = {GAFusion: Adaptive Fusing LiDAR and Camera with
                Multiple Guidance for 3D Object Detection},
-  author    = {Li, Xiaotian and others},
+  author    = {Li, Xiaotian and Fan, Baojie and Tian, Jiandong
+               and Fan, Huijie},
   booktitle = {Proceedings of the IEEE/CVF Conference on
                Computer Vision and Pattern Recognition (CVPR)},
   year      = {2024}
@@ -84,9 +85,8 @@
 @inproceedings{wang2024occworld,
   title     = {OccWorld: Learning a 3D Occupancy World Model
                for Autonomous Driving},
-  author    = {Wang, Wenzhao and Wang, Zhiqi and Xu, Mengmeng
-               and Cai, Dubing and Yu, Fisher and Wang, Jiwen
-               and Zhao, Haibin},
+  author    = {Zheng, Wenzhao and Chen, Weiliang and Huang, Yuanhui
+               and Zhang, Borui and Duan, Yueqi and Lu, Jiwen},
   booktitle = {Proceedings of the European Conference on
                Computer Vision (ECCV)},
   year      = {2024}
@@ -202,8 +202,10 @@
 @inproceedings{kalble2025evocc,
   title={EvOcc: Accurate Semantic Occupancy for Automated Driving Using
          Evidence Theory},
-  author={K{\"a}lble, Jonas and others},
-  booktitle={CVPR}, year={2025}}
+  author={K{\"a}lble, Jonas and Wirges, Sascha and Tatarchenko, Maxim
+          and Ilg, Eddy},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision
+             and Pattern Recognition (CVPR)}, year={2025}}
 
 
 % ---------------------------------------------------------------------
@@ -214,11 +216,13 @@
 
 % READ-ME. arxiv.org/abs/2211.06308 -- the closest prior work on the
 % QUANTITY itself: where a sensor can measure versus where it is blind.
-@article{borger2022sensorvisibility,
+@inproceedings{borger2022sensorvisibility,
   title={Sensor Visibility Estimation: Metrics and Methods for Systematic
          Performance Evaluation and Improvement},
-  author={B{\"o}rger, Joachim and others},
-  journal={arXiv preprint arXiv:2211.06308}, year={2022}}
+  author={B{\"o}rger, Joachim and Zapf, Marc Patrick and Kopytjuk, Marat
+          and Li, Xinrun and Gl{\"a}ser, Claudius},
+  booktitle={IEEE International Conference on Intelligent Transportation
+             Systems (ITSC)}, year={2022}}
 
 % READ-ME. arxiv.org/abs/2406.11021 -- uncertainty for CAMERA-BASED
 % occupancy specifically. This is the nearest competitor to our framing and
@@ -226,7 +230,8 @@
 @article{occ2024alpha,
   title={$\alpha$-OCC: Uncertainty-Aware Camera-based 3D Semantic Occupancy
          Prediction},
-  author={Wang, Sanbao and others},
+  author={Su, Sanbao and Chen, Nuo and Lin, Chenchen and
+          Juefei-Xu, Felix and Feng, Chen and Miao, Fei},
   journal={arXiv preprint arXiv:2406.11021}, year={2024}}
 
 % READ-ME. arxiv.org/abs/2510.18552 -- a dataset built to evaluate
@@ -245,7 +250,8 @@
 @article{occsurvey2024,
   title={Vision-based 3D Occupancy Prediction in Autonomous Driving:
          A Review and Outlook},
-  author={Xu, Yanan and others},
+  author={Zhang, Yanan and Zhang, Jinqing and Wang, Zengran and
+          Xu, Junhao and Huang, Di},
   journal={arXiv preprint arXiv:2405.02595}, year={2024}}
 
 % =====================================================================
@@ -284,17 +290,25 @@
 @inproceedings{wang2023openoccupancy,
   title={OpenOccupancy: A Large Scale Benchmark for Surrounding Semantic
          Occupancy Perception},
-  author={Wang, Xiaofeng and others},
-  booktitle={ICCV}, year={2023}}
+  author={Wang, Xiaofeng and Zhu, Zheng and Xu, Wenbo and
+          Zhang, Yunpeng and Wei, Yi and Chi, Xu and Ye, Yun and
+          Du, Dalong and Lu, Jiwen and Wang, Xingang},
+  booktitle={Proceedings of the IEEE/CVF International Conference on
+             Computer Vision (ICCV)}, year={2023}}
 
-@article{liu2023sparseocc,
-  title={Fully Sparse 3D Panoptic Occupancy Prediction},
-  author={Liu, Haisong and others},
-  journal={arXiv preprint arXiv:2312.17118}, year={2023}}
+@inproceedings{liu2023sparseocc,
+  title={Fully Sparse 3D Occupancy Prediction},
+  author={Liu, Haisong and Chen, Yang and Wang, Haiguang and
+          Yang, Zetong and Li, Tianyu and Zeng, Jia and Chen, Li and
+          Li, Hongyang and Wang, Limin},
+  booktitle={Proceedings of the European Conference on Computer Vision
+             (ECCV)}, year={2024}}
 
 @article{zheng2024monoocc,
   title={MonoOcc: Digging into Monocular Semantic Occupancy Prediction},
-  author={Zheng, Yupeng and others},
+  author={Zheng, Yupeng and Li, Xiang and Li, Pengfei and
+          Zheng, Yuhang and Jin, Bu and Zhong, Chengliang and
+          Long, Xiaoxiao and Zhao, Hao and Zhang, Qichao},
   journal={arXiv preprint arXiv:2403.08766}, year={2024}}
 
 @article{lightocc2024,
@@ -404,14 +418,19 @@
 % ---- monocular geometry: the independent occluder source A55b points to
 @article{bochkovskii2024depthpro,
   title={Depth Pro: Sharp Monocular Metric Depth in Less Than a Second},
-  author={Bochkovskii, Aleksei and others},
+  author={Bochkovskii, Aleksei and Delaunoy, Ama{\"e}l and
+          Germain, Hugo and Santos, Marcel and Zhou, Yichao and
+          Richter, Stephan R. and Koltun, Vladlen},
   journal={arXiv preprint arXiv:2410.02073}, year={2024}}
 
 @article{hu2024metric3dv2,
-  title={Metric3D v2: A Versatile Monocular Geometric Foundation Model for
+  title={Metric3Dv2: A Versatile Monocular Geometric Foundation Model for
          Zero-shot Metric Depth and Surface Normal Estimation},
-  author={Hu, Mu and others},
-  journal={arXiv preprint arXiv:2404.15506}, year={2024}}
+  author={Hu, Mu and Yin, Wei and Zhang, Chi and Cai, Zhipeng and
+          Long, Xiaoxiao and Wang, Kaixuan and Chen, Hao and Yu, Gang
+          and Shen, Chunhua and Shen, Shaojie},
+  journal={IEEE Transactions on Pattern Analysis and Machine
+           Intelligence}, year={2024}}
 
 @article{depthanyprior2025,
   title={Depth Anything with Any Prior},
@@ -420,15 +439,18 @@
   journal={arXiv preprint arXiv:2505.10565}, year={2025}}
 
 % ---- reliability of dense prediction, the closest analogue to our task
-@article{derooij2023segreliability,
+@inproceedings{derooij2023segreliability,
   title={Reliability in Semantic Segmentation: Are We on the Right Track?},
-  author={de Jorge, Pau and others},
-  journal={CVPR}, year={2023}}
+  author={de Jorge, Pau and Volpi, Riccardo and Torr, Philip and
+          Rogez, Gregory},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision
+             and Pattern Recognition (CVPR)}, year={2023}}
 
 @article{dreissig2023lidarcalib,
   title={On the Calibration of Uncertainty Estimation in LiDAR-based
          Semantic Segmentation},
-  author={Drei{\ss}ig, Mariella and others},
+  author={Drei{\ss}ig, Mariella and Piewak, Florian and
+          Boedecker, Joschka},
   journal={arXiv preprint arXiv:2308.02248}, year={2023}}
 
 @article{blum2019fishyscapes,
@@ -498,3 +520,13 @@
   type={International Standard},
   number={ISO 21448:2022},
   year={2022}}
+
+% Added 2026-11-07. Second architecture for the voxel-level replication in
+% Tab. 1. Author list read off arxiv.org/abs/2311.12058v1.
+@article{yu2023flashocc,
+  title={FlashOcc: Fast and Memory-Efficient Occupancy Prediction via
+         Channel-to-Height Plugin},
+  author={Yu, Zichen and Shu, Changyong and Deng, Jiajun and Lu, Kangjie
+          and Liu, Zongdai and Yu, Jiangyong and Yang, Dawei and
+          Li, Hui and Chen, Yan},
+  journal={arXiv preprint arXiv:2311.12058}, year={2023}}
