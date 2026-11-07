@@ -56,18 +56,13 @@ Anh-Quan Cao and Raoul de Charette.
 \newblock Monoscene: Monocular 3d semantic scene completion.
 \newblock In \emph{CVPR}, 2022.
 
-\bibitem[Chambon et~al.(2024)Chambon, Buhet, Wirbel, Laptev, and
-  Perez]{chambon2024pointbev}
-Lo{\"i}c Chambon, Thibault Buhet, Eloi Wirbel, Ivan Laptev, and Patrick Perez.
+\bibitem[Chambon et~al.(2024)Chambon, Zablocki, Chen, Bartoccioni, P{\'e}rez,
+  and Cord]{chambon2024pointbev}
+Loick Chambon, Eloi Zablocki, Micka{\"e}l Chen, Florent Bartoccioni, Patrick
+  P{\'e}rez, and Matthieu Cord.
 \newblock Pointbev: A sparse approach for bev predictions.
 \newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
   and Pattern Recognition (CVPR)}, 2024.
-
-\bibitem[Chen et~al.(2024)Chen, Jiang, Gao, et~al.]{chen2024vadv2}
-Shaoyu Chen, Bo Jiang, Hao Gao, et~al.
-\newblock Vadv2: End-to-end vectorized autonomous driving via probabilistic
-  planning.
-\newblock \emph{arXiv preprint arXiv:2402.13243}, 2024.
 
 \bibitem[Corbi{\`e}re et~al.(2019)Corbi{\`e}re, Thome, Bar-Hen, Cord, and
   P{\'e}rez]{corbiere2019confidnet}
@@ -171,8 +166,8 @@ Yihan Hu, Jiazhi Yang, Li Chen, Keyu Li, Chonghao Sima, Xizhou Zhu, Siqi Chai,
 \newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
   and Pattern Recognition (CVPR)}, 2023.
 
-\bibitem[Huang et~al.(2021)Huang, Huang, Zhu, and Du]{huang2021bevdet}
-Junjie Huang, Guan Huang, Zheng Zhu, and Dalong Du.
+\bibitem[Huang et~al.(2021)Huang, Huang, Zhu, Ye, and Du]{huang2021bevdet}
+Junjie Huang, Guan Huang, Zheng Zhu, Yun Ye, and Dalong Du.
 \newblock Bevdet: High-performance multi-camera 3d object detection in
   bird-eye-view.
 \newblock \emph{arXiv preprint arXiv:2112.11790}, 2021.
@@ -189,6 +184,14 @@ Yuanhui Huang, Wenzhao Zheng, Yunpeng Zhang, Jie Zhou, and Jiwen Lu.
 \newblock {ISO} 21448:2022 road vehicles: Safety of the intended functionality.
 \newblock International Standard ISO 21448:2022, {International Organization
   for Standardization}, Geneva, Switzerland, 2022.
+
+\bibitem[Jiang et~al.(2024)Jiang, Chen, Gao, Liao, Zhang, Liu, and
+  Wang]{chen2024vadv2}
+Bo Jiang, Shaoyu Chen, Hao Gao, Bencheng Liao, Qian Zhang, Wenyu Liu, and
+  Xinggang Wang.
+\newblock Vadv2: End-to-end vectorized autonomous driving via probabilistic
+  planning.
+\newblock \emph{arXiv preprint arXiv:2402.13243}, 2024.
 
 \bibitem[Jiang et~al.(2018)Jiang, Kim, Guan, and Gupta]{jiang2018trust}
 Heinrich Jiang, Been Kim, Melody~Y. Guan, and Maya Gupta.
@@ -428,11 +431,11 @@ Yupeng Zheng, Xiang Li, Pengfei Li, Yuhang Zheng, Bu Jin, Chengliang Zhong,
 \newblock Monoocc: Digging into monocular semantic occupancy prediction.
 \newblock \emph{arXiv preprint arXiv:2403.08766}, 2024{\natexlab{b}}.
 
-\bibitem[Zhu et~al.(2024)Zhu, Cheng, Zhang, and Liu]{zhu2024revisiting}
-Fei Zhu, Zhen Cheng, Xu-Yao Zhang, and Cheng-Lin Liu.
+\bibitem[Zhu et~al.(2024)Zhu, Zhang, Cheng, and Liu]{zhu2024revisiting}
+Fei Zhu, Xu-Yao Zhang, Zhen Cheng, and Cheng-Lin Liu.
 \newblock Revisiting confidence estimation: Towards reliable failure
   prediction.
-\newblock \emph{TPAMI}, 2024.
+\newblock \emph{arXiv preprint arXiv:2403.02886}, 2024.
 
 \bibitem[Zhu et~al.(2026)Zhu, Xue, Zhang, Jiang, Zhou, Yan, Gao, Cai, Liu, Li,
   and Shen]{zhu2026dlwm}

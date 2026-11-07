@@ -470,8 +470,9 @@ fixed once before any result in this paper and never retuned per backbone
 or per split, and \cref{sec:ablations} varies it over a factor of four.
 
 \paragraph{First-hit visibility.}
-Visibility is decided by marching the ray from camera $i$ and asking
-whether $v$ is the first occupied cell it meets:
+First-hit visibility traces rays through the grid and stops each ray at
+its first occupied cell. Camera $i$ therefore sees $v$ when $v$ is that
+first cell:
 \begin{equation}
 s_i(v;\mathcal{G}) \;=\; \mathbb{1}\!\left[\,v = \!\!\arg\min_{u \in \mathcal{R}_i(v),\,
    \mathcal{G}(u)=1} \!\! \lVert u - o_i \rVert \,\right],
@@ -483,9 +484,11 @@ geometry, and \cref{sec:source} is about where it comes from.
 
 \paragraph{Why not a z-buffer.}
 Rendering the volume once per camera and reading depths would be far
-cheaper, and we tried nine variants of it. All of them decide occlusion
-once per voxel, and a voxel can be half-occluded: a pole in front of a bus
-removes part of the bus's footprint, not all of it. Resolving that
+cheaper, and we tried nine variants of it. Visibility is binary for each voxel--camera pair, and a voxel remains
+visible when it is only partly occluded, provided at least one sampled ray
+reaches it. A z-buffer decides occlusion from a single projected depth and
+so cannot express that: a pole in front of a bus removes part of the bus's
+footprint, not all of it. Resolving that
 correctly requires per-pixel first-hit, which is why \cref{eq:firsthit} is
 evaluated by ray marching.
 
@@ -508,9 +511,10 @@ serves any backbone evaluated on the same rig and grid.
 
 \subsection{Where the scene geometry comes from}
 \label{sec:source}
-\Cref{eq:firsthit} needs to know what else is solid, and that requirement
-is not a detail. We evaluate two choices and keep them notationally
-distinct throughout, as $O_{\textsc{gt}} = O(v;\mathcal{G}_{\textsc{gt}})$
+\Cref{eq:firsthit} requires knowledge of which space is occupied, and that
+requirement is not a detail. We consider two sources of this information
+and keep them notationally distinct throughout, as
+$O_{\textsc{gt}} = O(v;\mathcal{G}_{\textsc{gt}})$
 and $O_{\text{pred}} = O(v;\hat{\mathcal{G}}_{\text{pred}})$.
 
 $\mathcal{G}_{\textsc{gt}}$ is the dense Occ3D ground-truth volume. It is
@@ -541,29 +545,32 @@ O_j \;=\; \max_{v \in \mathcal{B}_j \,:\, y(v)\in\mathcal{D}} O(v;\mathcal{G}),
 \end{equation}
 Both use a maximum, for the same reason and to keep the comparison fair:
 one well-resolved voxel is enough to say the rig had evidence, and one
-confident voxel is enough to say the model committed. Restricting $O_j$ to
-voxels the ground truth assigns to the object keeps the score on the
-object rather than on the free space around it; the confidence score is
-not restricted, because the model does not know which voxels those are.
+confident voxel is enough to say the model committed. Observability is evaluated only within voxels that the ground truth
+assigns to the object, which keeps the score on the object rather than on
+the free space around it. Confidence is evaluated across all voxels in the
+box, because the model has no access to the ground-truth object boundary.
 Instances with fewer than eight ground-truth voxels are dropped, since
 below that the aggregation is dominated by discretisation. This leaves
 \nObj\ objects on the sealed test split.
 
-We also report a LiDAR point-count oracle, the number of returns inside
-$\mathcal{B}_j$. It sees a modality the model never receives and is an
-upper reference rather than a competing method.
+We also report a LiDAR point-count oracle, which uses the number of LiDAR
+returns inside $\mathcal{B}_j$. Unlike the camera-only model, this oracle
+has access to LiDAR, so it is an upper reference rather than a competing
+method.
 
 
 % ------------------------------------------------------------------
 \section{Experiments}
 
-The experiments answer four questions in order. Does the measure beat the
-dataset's own camera mask at ranking error (\cref{sec:h2})? Does its value
-depend on the granularity of the failure being ranked
-(\cref{sec:inversion})? Is it redundant with the model's confidence, or a
-second axis? And does it survive the only occupancy field a vehicle
-actually has (\cref{sec:deployable})? Every number is computed on a split sealed before method
-development, and every contrast was specified before its data existed.
+The experiments establish four things in order. \Cref{sec:h2} compares the
+measure against the dataset's own camera mask at ranking error.
+\Cref{sec:inversion} shows that its value depends on the granularity of the
+failure being ranked. \Cref{sec:analysis} separates it from the model's own
+confidence rather than treating the two as interchangeable.
+\Cref{sec:deployable} substitutes the only occupancy field a vehicle
+actually has and reports what happens. Every number is computed on a split
+sealed before method development, and every contrast was specified before
+its data existed.
 
 \subsection{Setup}
 \paragraph{Models and data.}
@@ -732,9 +739,22 @@ The model-derived family is not close to exhausted by maximum softmax, but
 it is bounded by it: the best of the three reaches 0.7193 and the other two
 sit near chance, because inside a box the model never populated there is
 very little for any output statistic to vary over. Entropy and an energy
-score require the full class distribution, which our export does not retain,
-and MC-dropout and ensembles require additional forward passes, so all four
-remain untested here.
+score require the full class distribution, which our export does not
+retain, so both remain untested here.
+
+\paragraph{Ensemble disagreement.}
+A heterogeneous ensemble of the three models, which is not a seed ensemble,
+was scored by modal disagreement and by the spread of the free-class
+probability, each pooled as a mean or a maximum inside the box. All four
+scores and their orientation were registered before the scoring script was
+written, and as registered all four fall below $0.5$: $0.4060$, $0.3920$,
+$0.4082$ and $0.2798$ on the same \nObj\ objects. The models agree most
+precisely where all three fail. Inverted to their best orientation, which is a post hoc choice and carries
+no registered interval, the strongest reaches $0.7202$, level with
+single-model MSP's $0.7193$ and below observability's \objObs. A committee cannot detect an object that every
+member missed, because their predictions agree on the same wrong answer,
+so ensemble disagreement inherits the blind spot of the models it reads.
+MC dropout is not evaluated: these checkpoints contain no dropout layers.
 
 \subsection{The geometry source}
 \label{sec:deployable}
@@ -859,6 +879,7 @@ we report the losses at the same size as the wins.}
 \end{figure*}
 
 \subsection{Analysis}
+\label{sec:analysis}
 
 \paragraph{The two signals are not redundant.}
 If observability were merely a noisy restatement of confidence, holding one
@@ -938,7 +959,7 @@ fixed at $2$\,s before the run; at that value the interval is
 $[+0.0098, +0.0214]$ and H4 holds. The monotone trend to $4$\,s is reported
 but was not registered and is not claimed.
 
-\paragraph{Does $\pi_{\text{full}}$ matter?} Less than one might fear,
+\paragraph{Sensitivity to $\pi_{\text{full}}$.} It matters less than one might fear,
 and the analytic part bounds the empirical part. Coverage is
 $\min(1, A_i/\pi_{\text{full}})$, so for a voxel where no camera saturates,
 changing $\pi_{\text{full}}$ multiplies every $c_i$ by one constant, leaves
@@ -1014,7 +1035,7 @@ $10.4\%$, drivable surface $4.3\%$, remainder spread across the rest. The
 blind volume is mostly buildings and foliage, with one voxel in ten hidden
 behind another car, which is the subset a planner cares about most.
 
-\paragraph{Would a seventh camera fix it?} We
+\paragraph{A seventh camera would not fix it.} We
 re-ran the geometry with each of six additional camera placements added to
 the rig. The best of them, a higher roof mount, recovers $2.23\%$ of those
 voxels; a rear telephoto recovers $1.29\%$; no other placement exceeds
@@ -1086,9 +1107,9 @@ amendment log that fixes every hypothesis and acceptance threshold before
 its run are available upon request.
 
 \paragraph{Use of large language models.}
-A large language model was used in two ways. During the research it was
+Claude and ChatGPT were used in two ways. During the research they were
 used to discuss candidate experiments and to help interpret results. During
-revision of this manuscript it was used to edit and condense the text, to
+revision of this manuscript they were used to edit and condense the text, to
 check reported numbers and method descriptions against the evaluation code
 and the result files, and to verify bibliographic entries against their
 published sources. The authors conceptualised the study, developed the
